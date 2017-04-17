@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
-import todosReducer from './todos_reducer';
-import stepsReducer from './steps_reducer';
+import riskReducer from './risk_reducer.js';
+import riskTableReducer from './risk_table_reducer.js';
 
 const RootReducer = combineReducers({
-  todos: todosReducer,
-  steps: stepsReducer
+  risk: riskReducer,
+  ristTable: riskTableReducer
 });
 
 export default RootReducer;
