@@ -9,16 +9,24 @@ class RiskSelector extends React.Component {
     this.state = {risk: 0};
     this.setRisk = this.setRisk.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
+    this.highlightNumber = this.highlightNumber.bind(this);
   }
 
   setRisk(e) {
      e.preventDefault();
      console.log(e.target.innerHTML);
-     this.setState({ risk: e.target.innerHTML });
-    this.highlightRow(e.target.innerHTML);
+    this.setState({ risk: e.target.innerHTML });
+    this.highlightRow();
+    this.highlightNumber();
   }
 
-  highlightRow(riskNum){
+  highlightNumber(){
+     $('li').css('background', 'white');
+     $($('ul')[0].children[this.state.risk - 1]).css("background-color", "gold");;
+  }
+
+
+  highlightRow(){
     for (let i = 0; i < 10; i++){
       if (i % 2 == 0) {
         $($($('tbody')[0].children[i])[0].children).css('background','#fcfcfc');
@@ -27,9 +35,8 @@ class RiskSelector extends React.Component {
       }
     }
 
-    let $row = $($('tbody')[0].children[riskNum - 1]);
+    let $row = $($('tbody')[0].children[this.state.risk - 1]);
     $($row[0].children).css("background-color", "gold");
-
   }
 
 
