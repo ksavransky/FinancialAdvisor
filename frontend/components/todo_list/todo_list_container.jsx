@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import TodoList from './todo_list';
 
 // Actions

@@ -1,10 +1,10 @@
 import React from 'react';
-import TodoListContainer from './todo_list/todo_list_container';
+import { Link } from 'react-router';
 
-const App = () => (
-  <div className="app">
-    <h1>Super Awesome Todo List</h1>
-    <TodoListContainer />
+const App = ({ children }) => (
+  <div className="nac">
+    <h1>Financial Advisor</h1>
+    {children}
   </div>
 );
 
