@@ -1,6 +1,3 @@
-// import Table from './table.jsx';
-// import DonutChart from './donut_chart.jsx';
-
 import React from 'react';
 
 class RiskCalculator extends React.Component {
@@ -9,6 +6,7 @@ class RiskCalculator extends React.Component {
       this.state = {money: 0};
       this.setInput = this.setInput.bind(this);
       this.createTable = this.createTable.bind(this);
+      this.goToSelector = this.goToSelector.bind(this);
       this.calculateAllocation = this.calculateAllocation.bind(this);
   }
 
@@ -17,7 +15,7 @@ class RiskCalculator extends React.Component {
     $('.risk-calculator-error-message')[0].innerHTML = "";
     let input = $(e.target)[0].value;
     if(/\D/.test(input)){
-      $('.risk-calculator-error-message')[0].innerHTML = "Please type only digits.";
+      $('.risk-calculator-error-message')[0].innerHTML = "Please use digits.";
     } else {
       this.setState({ money: $(e.target)[0].value });
     }
@@ -67,6 +65,9 @@ class RiskCalculator extends React.Component {
         ]
     });
   }
+  goToSelector() {
+    this.props.history.push('/home');
+  }
 
   componentDidMount(){
     this.createTable();
@@ -78,10 +79,13 @@ class RiskCalculator extends React.Component {
 
   render() {
     return(
-      <div id="risk-calculator-container">
+      <div className="risk-calculator-container">
+          <div className="risk-calculator-label">Personalized Portfolio</div>
           <div className="risk-calculator-input-container">
+            <div>Your Investment: $</div>
             <input type="text" onKeyUp={this.setInput}/>
             <div className="risk-calculator-error-message"></div>
+            <div className="start-over-button" onClick={this.goToSelector}>Start Over</div>
           </div>
           <div id="customRiskTable"></div>
       </div>

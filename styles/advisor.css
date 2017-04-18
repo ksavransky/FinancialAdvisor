@@ -29,15 +29,6 @@ li {
   flex-direction: column;
 }
 
-#graphic {
-  display: flex;
-  margin-left: 50px;
-}
-
-#risk-selector-header {
-  display: flex;
-}
-
 #continue {
   display: flex;
   justify-content: center;
@@ -55,26 +46,20 @@ li {
   opacity: 0.4;
 }
 
+#graphic {
+  display: flex;
+  margin-left: 50px;
+}
+
 #jsGrid {
   margin-top: 20px;
 }
+
 #risk-selector {
   display: inherit;
   height: 60px;
   width: 620px;
   align-self: center;
-}
-
-#risk-selector ul {
-  display: inherit;
-  width: 620px;
-}
-
-#risk-selector-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
 }
 
 #risk-selector li {
@@ -96,13 +81,32 @@ li {
 #risk-selector li:hover{
   background-color: #e6ff3f;
 }
+
+#risk-selector ul {
+  display: inherit;
+  width: 620px;
+}
+
+#risk-selector-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+#risk-selector-header {
+  display: flex;
+}
+
 #top-logo {
   position: absolute;
   left: 0;
   width: 200px;
   height: 75px;
   margin: 20px;
+  cursor: pointer;
 }
+
 #view-logo{
   height: 50px;
   width: 50px;
@@ -119,8 +123,6 @@ li {
   cursor: pointer;
 }
 
-
-
 svg#donut-chart {
   display: none;
   margin-top: 40px;
@@ -132,6 +134,7 @@ text.inner-circle {
   font-size: 20px;
   text-transform: uppercase;
 }
+
 .app-title {
   font-size: 55px;
   font-weight: bold;
@@ -141,6 +144,7 @@ text.inner-circle {
   color: #2273b7;
   font-family: "Roboto", sans-serif;
 }
+
 .arc {
   cursor: pointer;
 }
@@ -160,6 +164,7 @@ text.inner-circle {
   background-color: white;
   cursor: pointer;
 }
+
 .nav {
   display: flex;
   justify-content: center;
@@ -176,16 +181,31 @@ text.inner-circle {
   justify-content: center;
   flex-direction: column;
 }
+
+.risk-calculator-container {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
 .risk-calculator-input-container {
   display: flex;
   flex-direction: row;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 20px;
+  align-items: center;
 }
+
 .risk-calculator-input-container input{
-  height: 45px;
+  height: 40px;
   width: 200px;
   color: black;
-  font-size: 30px;
+  font-size: 22px;
+  margin-left: 3px;
+  border-radius: 5px;
 }
+
 .risk-calculator-error-message{
   display: flex;
   justify-content: center;
@@ -194,8 +214,36 @@ text.inner-circle {
   width: 206px;
   background: transparent;
   color: red;
-  margin-left: 20px;
+  margin-left: 13px;
   font-size: 20px;
+}
+
+.risk-calculator-label{
+  font-size: 34px;
+  font-weight: bold;
+  align-self: center;
+}
+
+.risk-label-select{
+  display: flex;
+  font-size: 22px;
+  font-weight: bold;
+  justify-content: center;
+  margin-right: 56px;
+}
+
+.risk-label-levels{
+  display: flex;
+  flex-direction: row;
+  font-size: 18px;
+  justify-content: space-between;
+}
+
+.risk-label{
+  display: flex;
+  margin-right: 96px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .risk-selector-header-labels {
@@ -204,22 +252,19 @@ text.inner-circle {
   width: 730px;
   font-family: "Roboto", sans-serif;
 }
-.risk-label-select{
+
+.start-over-button{
   display: flex;
-  font-size: 22px;
-  font-weight: bold;
   justify-content: center;
-  margin-right: 56px;
-}
-.risk-label-levels{
-  display: flex;
-  flex-direction: row;
-  font-size: 18px;
-  justify-content: space-between;
-}
-.risk-label{
-  display: flex;
-  margin-right: 96px;
-  margin-bottom: 5px;
-  margin-top: 5px;
+  align-items: center;
+  align-self: center;
+  height: 40px;
+  width: 88px;
+  color: black;
+  border: 3px solid black;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  background: white;
 }

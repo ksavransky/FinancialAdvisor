@@ -1,11 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-// react router
 import { IndexRoute, hashHistory, Redirect } from 'react-router';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
-// react components
 import App from './app';
 
 import RiskSelectorContainer from './risk_selector/risk_selector_container.jsx';
