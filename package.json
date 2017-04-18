@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --inline"
+    "start": "webpack-dev-server --inline",
+    "postinstall": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -35,5 +36,9 @@
   "bugs": {
     "url": "https://github.com/ksavransky/FinancialAdvisor/issues"
   },
-  "homepage": "https://github.com/ksavransky/FinancialAdvisor#readme"
+  "homepage": "https://github.com/ksavransky/FinancialAdvisor#readme",
+  "engines": {
+    "node": "6.3.1",
+    "npm": "3.10.3"
+  }
 }
