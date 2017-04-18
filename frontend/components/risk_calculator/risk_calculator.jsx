@@ -80,7 +80,8 @@ class RiskCalculator extends React.Component {
   render() {
     return(
       <div className="risk-calculator-container">
-          <div className="risk-calculator-label">Personalized Portfolio at Risk Level {this.props.risk.risk.risk}</div>
+          <div className="risk-calculator-label">Personalized Portfolio</div>
+          <div className="risk-calculator-label-risk">Risk Level {this.props.risk.risk.risk}</div>
           <div className="risk-calculator-input-container">
             <div>Your Investment: $</div>
             <input type="text" onKeyUp={this.setInput}/>

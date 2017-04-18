@@ -228,6 +228,12 @@ text.inner-circle {
   align-self: center;
 }
 
+.risk-calculator-label-risk{
+  font-size: 32px;
+  font-weight: bold;
+  align-self: center;
+}
+
 .risk-label-select{
   display: flex;
   font-size: 22px;
