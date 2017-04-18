@@ -165,6 +165,10 @@ text.inner-circle {
   cursor: pointer;
 }
 
+.jsgrid-grid-body{
+  overflow: hidden !important;
+}
+
 .nav {
   display: flex;
   justify-content: center;
