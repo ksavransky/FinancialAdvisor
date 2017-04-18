@@ -41,6 +41,16 @@ li {
   flex-direction: column;
 }
 
+#risk-selector-header {
+  display: flex;
+}
+
+#continue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #risk-selector {
   display: inherit;
   height: 60px;
@@ -101,6 +111,12 @@ text.inner-circle {
   font-weight: 300;
   font-size: 18px;
   color: #fff;
+}
+
+.button {
+  color: black;
+  background-color: white;
+  cursor: pointer;
 }
 
 .nav {

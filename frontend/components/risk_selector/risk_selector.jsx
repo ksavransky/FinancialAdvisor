@@ -24,6 +24,7 @@ class RiskSelector extends React.Component {
     this.createNumList = this.createNumList.bind(this);
     this.highlightNumber = this.highlightNumber.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
+    this.goToCalculator = this.goToCalculator.bind(this);
   }
 
 createNumList(){
@@ -64,6 +65,10 @@ createNumList(){
     $($row[0].children).css("background-color", "#e6ff3f");
   }
 
+  goToCalculator() {
+    this.props.history.push('/calculator');
+  }
+
   componentDidMount() {
     this.createNumList();
   }
@@ -75,9 +80,12 @@ createNumList(){
   render() {
     return(
       <div id="risk-selector-container">
-        <div id="risk-selector"></div>
-        <Table risk={this.state.risk} riskTable={this.state.riskTable}/>
-        <DonutChart risk={this.state.risk} riskTable={this.state.riskTable}/>
+        <div id="risk-selector-header">
+          <div id="risk-selector"></div>
+          <div id="continue" className="button" onClick={this.goToCalculator}>Continue</div>
+        </div>
+        <Table riskTable={this.state.riskTable}/>
+        <DonutChart riskLevel={this.state.risk} riskTable={this.state.riskTable}/>
       </div>
     );
   }

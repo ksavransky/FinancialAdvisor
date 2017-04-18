@@ -10,17 +10,14 @@ class DonutChart extends React.Component {
 
   createDonut(){
     $('svg').html('');
-    console.log(this.props.risk);
-    let risk = this.props.risk
+    let risk = this.props.riskLevel
     let riskTable = this.props.riskTable
     let riskRow = riskTable[risk - 1];
-    console.log(riskTable);
 
     var riskAmounts= [1, 1, 1, 1, 1];
     var riskLabels = ["","","","",""];
+
     if (risk !== 0){
-      console.log(riskRow);
-      console.log(riskRow["Bonds %"]);
       riskLabels = ["Bonds","Large Cap","Mid Cap","Foreign","Small Cap"]
       riskAmounts = [riskRow["Bonds %"], riskRow["Large Cap %"],
                         riskRow["Mid Cap %"], riskRow["Foreign %"], riskRow["Small Cap %"]];

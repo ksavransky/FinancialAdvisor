@@ -1,12 +1,10 @@
 import React from 'react';
-// import TodoDetailViewContainer from './todo_detail_view_container';
 import merge from 'lodash/merge';
 
 class Table extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      risk: this.props.risk,
       riskTable: this.props.riskTable
     };
     this.createTable = this.createTable.bind(this);
@@ -20,7 +18,7 @@ class Table extends React.Component {
 
         inserting: false,
         editing: false,
-        sorting: true,
+        sorting: false,
         paging: false,
 
         data: this.state.riskTable,
