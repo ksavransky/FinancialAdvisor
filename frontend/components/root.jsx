@@ -20,8 +20,6 @@ const Root = ({ store }) => {
       <Router>
          <div className="react-root">
           <Route path="/" component={App}></Route>
-          <Route path="/todos" component={ToDoListContainer}></Route>
-          <Route path="/steps" component={StepListContainer}></Route>
           <Route path="/risk" component={RiskSelectorContainer}></Route>
          </div>
       </Router>

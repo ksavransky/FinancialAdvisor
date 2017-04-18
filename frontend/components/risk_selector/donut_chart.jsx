@@ -5,29 +5,47 @@ import merge from 'lodash/merge';
 class DonutChart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      risk: this.props.risk,
-      riskTable: this.props.riskTable
-    };
     this.createDonut = this.createDonut.bind(this);
   }
 
   createDonut(){
+    $('svg').html('');
+    console.log(this.props.risk);
+    let risk = this.props.risk
+    let riskTable = this.props.riskTable
+    let riskRow = riskTable[risk - 1];
+    console.log(riskTable);
+
+    var riskAmounts= [1, 1, 1, 1, 1];
+    var riskLabels = ["","","","",""];
+    if (risk !== 0){
+      console.log(riskRow);
+      console.log(riskRow["Bonds %"]);
+      riskLabels = ["Bonds","Large Cap","Mid Cap","Foreign","Small Cap"]
+      riskAmounts = [riskRow["Bonds %"], riskRow["Large Cap %"],
+                        riskRow["Mid Cap %"], riskRow["Foreign %"], riskRow["Small Cap %"]];
+      riskAmounts.forEach((amount, idx) => {
+        if(amount == 0){
+          riskLabels[idx] = '';
+        }
+      })
+    }
+
     var seedData = [{
-      "label": "Bonds",
-      "value": 35
+      "label": riskLabels[0],
+      "value": riskAmounts[0]
     }, {
-      "label": "Large Cap",
-      "value": 30
+      "label": riskLabels[1],
+      "value": riskAmounts[1]
     }, {
-      "label": "Mid Cap",
-      "value": 20
+      "label": riskLabels[2],
+      "value": riskAmounts[2]
     }, {
-      "label": "Foreign",
-      "value": 10
+      "label": riskLabels[3],
+      "value": riskAmounts[3]
     }, {
-      "label": "Small Cap",
-      "value": 5
+      "label": riskLabels[4],
+      "value": riskAmounts[4]
     }];
 
     // Define size & radius of donut pie chart
@@ -137,10 +155,9 @@ class DonutChart extends React.Component {
     this.createDonut();
   }
 
-componentDidUpdate(){
-console.log(this.state.risk);
-console.log(this.state.riskTable[(this.state.risk - 1)]["Bonds %"]);
-}
+  componentDidUpdate(){
+    this.createDonut();
+  }
 
   render() {
     return (

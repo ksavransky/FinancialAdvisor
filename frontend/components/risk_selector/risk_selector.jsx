@@ -40,8 +40,7 @@ createNumList(){
 }
 
   setRisk(e) {
-     e.preventDefault();
-     console.log(e.target.innerHTML);
+    e.preventDefault();
     this.setState({ risk: e.target.innerHTML });
     this.highlightRow();
     this.highlightNumber();
@@ -49,7 +48,7 @@ createNumList(){
 
   highlightNumber(){
      $('li').css('background', 'white');
-     $($('ul')[0].children[this.state.risk - 1]).css("background-color", "#e6ff3f");;
+     $($('ul')[0].children[this.state.risk - 1]).css("background-color", "#e6ff3f");
   }
 
   highlightRow(){
@@ -66,14 +65,14 @@ createNumList(){
   }
 
   componentDidMount() {
-    this.props.requestRisk();
-    this.props.requestRiskTable();
     this.createNumList();
   }
 
+  componentWillUnmount(){
+    this.props.receiveRisk({"risk": parseInt(this.state.risk), "riskTable": this.state.riskTable});
+  }
+
   render() {
-    console.log(this.props.RiskTable);
-    console.log(this.props.requestRiskTable());
     return(
       <div id="risk-selector-container">
         <div id="risk-selector"></div>

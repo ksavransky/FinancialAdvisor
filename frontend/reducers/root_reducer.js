@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux';
 
 import riskReducer from './risk_reducer.js';
-import riskTableReducer from './risk_table_reducer.js';
+// import riskTableReducer from './risk_table_reducer.js';
 
 const RootReducer = combineReducers({
-  risk: riskReducer,
-  ristTable: riskTableReducer
+  risk: riskReducer
 });
 
 export default RootReducer;

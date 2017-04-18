@@ -1,10 +1,14 @@
-import {RiskConstants} from '../actions/risk_actions.js'
+import { RECEIVE_RISK } from '../actions/risk_actions';
 import merge from 'lodash/merge';
 
-const riskReducer = function(state = {}, action){
+const riskReducer = (state = {}, action) => {
+  Object.freeze(state);
+  let nextState;
+
   switch(action.type){
-    case RiskConstants.RECEIVE_RISK:
-      return action.risk;
+    case RECEIVE_RISK:
+      nextState = {"risk": action.risk }
+      return nextState;
     default:
       return state;
   }
