@@ -13,7 +13,14 @@ class RiskCalculator extends React.Component {
   }
 
   setInput(e){
-    this.setState({ money: $(e.target)[0].value });
+    e.preventDefault()
+    $('.risk-calculator-error-message')[0].innerHTML = "";
+    let input = $(e.target)[0].value;
+    if(/\D/.test(input)){
+      $('.risk-calculator-error-message')[0].innerHTML = "Please type only digits.";
+    } else {
+      this.setState({ money: $(e.target)[0].value });
+    }
   }
 
   calculateAllocation(){
@@ -29,7 +36,7 @@ class RiskCalculator extends React.Component {
       });
 
     return riskPercents.map(percent => {
-      return Math.round(100*(percent * this.state.money))/100
+      return Math.ceil(100*(percent * this.state.money))/100
     });
   }
 
@@ -72,7 +79,10 @@ class RiskCalculator extends React.Component {
   render() {
     return(
       <div id="risk-calculator-container">
-          <input type="text" onKeyUp={this.setInput}/>
+          <div className="risk-calculator-input-container">
+            <input type="text" onKeyUp={this.setInput}/>
+            <div className="risk-calculator-error-message"></div>
+          </div>
           <div id="customRiskTable"></div>
       </div>
     );

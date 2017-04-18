@@ -25,6 +25,7 @@ class RiskSelector extends React.Component {
     this.highlightNumber = this.highlightNumber.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
     this.goToCalculator = this.goToCalculator.bind(this);
+    this.changeGraphic = this.changeGraphic.bind(this);
   }
 
 createNumList(){
@@ -45,6 +46,7 @@ createNumList(){
     this.setState({ risk: e.target.innerHTML });
     this.highlightRow();
     this.highlightNumber();
+    $('#continue').css('opacity', '1.0');
   }
 
   highlightNumber(){
@@ -66,7 +68,21 @@ createNumList(){
   }
 
   goToCalculator() {
-    this.props.history.push('/calculator');
+    if($('#continue').css('opacity') == 1.0) {
+        this.props.history.push('/calculator');
+    }
+  }
+
+  changeGraphic(){
+    if($('#donut-chart').css('display') == 'none'){
+      $('#donut-chart').css('display', 'block');
+      $('#jsGrid').css('display', 'none');
+      $("#view-logo img").attr("src","../app/assets/images/chartlogo.jpg");
+    } else {
+      $('#donut-chart').css('display', 'none');
+      $('#jsGrid').css('display', 'block');
+      $("#view-logo img").attr("src","../app/assets/images/donutlogo.png");
+    }
   }
 
   componentDidMount() {
@@ -80,12 +96,22 @@ createNumList(){
   render() {
     return(
       <div id="risk-selector-container">
+        <div className="risk-selector-header-labels">
+          <div className="risk-label-select">Please Select Risk Level</div>
+          <div className="risk-label-levels">
+            <div className="risk-label">Low</div>
+            <div className="risk-label">High</div>
+          </div>
+        </div>
         <div id="risk-selector-header">
           <div id="risk-selector"></div>
           <div id="continue" className="button" onClick={this.goToCalculator}>Continue</div>
         </div>
-        <Table riskTable={this.state.riskTable}/>
-        <DonutChart riskLevel={this.state.risk} riskTable={this.state.riskTable}/>
+        <div id="graphic">
+          <Table riskTable={this.state.riskTable}/>
+          <DonutChart riskLevel={this.state.risk} riskTable={this.state.riskTable}/>
+          <div id="view-logo" onClick={this.changeGraphic}><img src="../app/assets/images/donutlogo.png"/></div>
+        </div>
       </div>
     );
   }

@@ -19,4 +19,22 @@
     <div id="content"></div>
     <script src="./bundle.js"></script>
 </body>
+<script>
+    jQuery(document).ready(function ($) {
+      function removeLogo(){
+        let isDeviceMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if(!isDeviceMobile && $('body')[0].clientWidth < 900) {
+          $('#top-logo').css('visibility', 'hidden');
+        } else {
+          $('#top-logo').css('visibility', 'visible');
+        }
+      }
+
+      removeLogo();
+
+      $(window).resize(function () {
+        removeLogo();
+      });
+    })
+</script>
 </html>
