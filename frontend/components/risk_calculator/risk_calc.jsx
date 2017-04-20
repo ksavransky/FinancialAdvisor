@@ -1,6 +1,6 @@
 import React from 'react';
 
-class RiskCalculator extends React.Component {
+class RiskCalc extends React.Component {
   constructor(props) {
       super(props);
       this.state = {money: 0};
@@ -25,7 +25,8 @@ class RiskCalculator extends React.Component {
     let risk = this.props.risk;
     let riskLevel = risk.risk.risk;
     let riskRow = risk.risk.riskTable[riskLevel - 1];
-    let riskPercents = Object.values(riskRow).slice(1).map(value => {
+    let riskRowValues = Object.values(riskRow).slice(1);
+    let riskPercents = riskRowValues.map(value => {
           if(value == 0){
            return 0;
           } else {
@@ -33,20 +34,22 @@ class RiskCalculator extends React.Component {
           }
       });
 
-    return riskPercents.map(percent => {
+    return [riskPercents.map(percent => {
       return Math.ceil(100*(percent * this.state.money))/100
-    });
+    }), riskRowValues]
   }
 
   createTable(){
     let allocation = this.calculateAllocation();
 
-    let customRisk = [{ "Bonds": "$" + allocation[0], "Large Cap": "$" + allocation[1], "Mid Cap": "$" + allocation[2],
-                      "Foreign": "$" + allocation[3], "Small Cap": "$" + allocation[4] }];
+    let customRisk = [{"Bonds": allocation[1][0] + "%", "Large Cap": allocation[1][1] + "%", "Mid Cap": allocation[1][2] + "%",
+                      "Foreign": allocation[1][3] + "%", "Small Cap": allocation[1][4] + "%"},
+                      { "Bonds": "$" + allocation[0][0], "Large Cap": "$" + allocation[0][1], "Mid Cap": "$" + allocation[0][2],
+                      "Foreign": "$" + allocation[0][3], "Small Cap": "$" + allocation[0][4] }];
 
     $("#customRiskTable").jsGrid({
         width: "700px",
-        height: "68px",
+        height: "106px",
         align: "center",
 
         inserting: false,
@@ -94,4 +97,4 @@ class RiskCalculator extends React.Component {
   }
 }
 
-export default RiskCalculator;
+export default RiskCalc;

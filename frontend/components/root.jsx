@@ -7,7 +7,7 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import App from './app';
 
 import RiskSelectorContainer from './risk_selector/risk_selector_container.jsx';
-import RiskCalculatorContainer from './risk_calculator/risk_calculator_container.jsx';
+import RiskCalcContainer from './risk_calculator/risk_calc_container.jsx';
 
 
 
@@ -22,7 +22,7 @@ const Root = ({ store }) => {
               <Redirect to="/home"/>
           )}/>
           <Route path="/home" component={RiskSelectorContainer}></Route>
-          <Route path="/calculator" component={RiskCalculatorContainer}></Route>
+          <Route path="/calculator" component={RiskCalcContainer}></Route>
          </div>
       </Router>
     </Provider>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import RiskCalculator from './risk_calculator.jsx';
+import RiskCalc from './risk_calc.jsx';
 
 import { receiveRisk } from '../../actions/risk_actions';
 import { riskReducer } from '../../reducers/risk_reducer';
@@ -17,4 +17,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RiskCalculator);
+)(RiskCalc);
