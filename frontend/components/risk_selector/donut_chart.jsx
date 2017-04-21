@@ -45,8 +45,8 @@ class DonutChart extends React.Component {
     }];
 
     // Define size & radius of donut pie chart
-    var width = 450,
-        height = 450,
+    var width = 500,
+        height = 500,
         radius = Math.min(width, height) / 2;
 
     // Define arc colours
@@ -77,7 +77,7 @@ class DonutChart extends React.Component {
     svg.append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("r", 100)
+      .attr("r", 120)
       .attr("fill", "#fff") ;
 
     // Calculate SVG paths and fill in the colours

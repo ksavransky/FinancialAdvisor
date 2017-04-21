@@ -89,7 +89,7 @@ class RiskCalc extends React.Component {
             <div>Your Investment: $</div>
             <input type="text" onKeyUp={this.setInput}/>
             <div className="risk-calculator-error-message"></div>
-            <div className="start-over-button" onClick={this.goToSelector}>Start Over</div>
+            <div className="button" onClick={this.goToSelector}>Start Over</div>
           </div>
           <div id="customRiskTable"></div>
       </div>
