@@ -1,6 +1,6 @@
 import React from 'react';
 
-class RiskCalc extends React.Component {
+class RiskCalculator extends React.Component {
   constructor(props) {
       super(props);
       this.state = {money: 0};
@@ -97,4 +97,4 @@ class RiskCalc extends React.Component {
   }
 }
 
-export default RiskCalc;
+export default RiskCalculator;
