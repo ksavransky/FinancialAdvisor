@@ -88,12 +88,7 @@ li {
 }
 
 #top-logo {
-  position: absolute;
-  left: 0;
-  width: 200px;
-  height: 75px;
-  margin: 20px;
-  cursor: pointer;
+  visibility: hidden;
 }
 
 #view-logo {
