@@ -17,7 +17,8 @@ class RiskSelector extends React.Component {
           { "Risk": 7, "Bonds %": 20, "Large Cap %": 25, "Mid Cap %": 25, "Foreign %": 25, "Small Cap %": 5  },
           { "Risk": 8, "Bonds %": 10, "Large Cap %": 20, "Mid Cap %": 40, "Foreign %": 20, "Small Cap %": 10  },
           { "Risk": 9, "Bonds %": 0, "Large Cap %": 20, "Mid Cap %": 40, "Foreign %": 25, "Small Cap %": 15  },
-          { "Risk": 10, "Bonds %": 0, "Large Cap %": 10, "Mid Cap %": 30, "Foreign %": 30, "Small Cap %": 40  }
+          { "Risk": 10, "Bonds %": 0, "Large Cap %": 10, "Mid Cap %": 30, "Foreign %": 30, "Small Cap %": 40  },
+{ "Risk": 11, "Bonds %": 10, "Large Cap %": 10, "Mid Cap %": 25, "Foreign %": 25, "Small Cap %": 40  }
       ]
     };
     this.setRisk = this.setRisk.bind(this);
