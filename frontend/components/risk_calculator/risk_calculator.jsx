@@ -49,7 +49,7 @@ class RiskCalculator extends React.Component {
 
     $("#customRiskTable").jsGrid({
         width: "700px",
-        height: "106px",
+        height: "70px",
         align: "center",
 
         inserting: false,
@@ -84,14 +84,47 @@ class RiskCalculator extends React.Component {
     return(
       <div className="risk-calculator-container">
           <div className="risk-calculator-label">Personalized Portfolio</div>
-          <div className="risk-calculator-label-risk">Risk Level {this.props.risk.risk.risk}</div>
-          <div className="risk-calculator-input-container">
-            <div>Your Investment: $</div>
-            <input type="text" onKeyUp={this.setInput}/>
-            <div className="risk-calculator-error-message"></div>
-            <div className="button" onClick={this.goToSelector}>Start Over</div>
+          <div className="risk-calculator-label-container">
+            <div className="risk-calculator-label-risk">Risk Level {this.props.risk.risk.risk}</div>
+            <div className="button" id="start-over-button" onClick={this.goToSelector}>Start Over</div>
           </div>
           <div id="customRiskTable"></div>
+          <div id="currentInvestmentLabel">Please Enter Your Current Portfolio</div>
+          <div className="risk-calculator-input-container">
+              <div className="risk-calculator-input-labels">
+                  <label>Current Investment</label>
+                  <label>Difference</label>
+                  <label>New Investment</label>
+              </div>
+              <div className="risk-calculator-main">
+                <div className="risk-calculator-main-row">
+                  <label>Bonds $:</label>
+                  <div className="risk-calculator-row-inputs">
+                    <input type="text"/>
+                    <input disabled type="text"/>
+                    <input disabled type="text"/>
+                  </div>
+                </div>
+                <div className="risk-calculator-main-row">
+                  <label>Small Cap $:</label>
+                  <div className="risk-calculator-row-inputs">
+                    <input type="text"/>
+                    <input type="text"/>
+                    <input type="text"/>
+                  </div>
+                </div>
+                <div className="risk-calculator-main-row">
+                  <label>Large Cap $:</label>
+                  <div className="risk-calculator-row-inputs">
+                    <input type="text"/>
+                    <input type="text"/>
+                    <input type="text"/>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
       </div>
     );
   }

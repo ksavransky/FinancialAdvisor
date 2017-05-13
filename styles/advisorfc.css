@@ -31,9 +31,16 @@ li {
 
 #continue {
   margin-left: 5px;
+  margin-top: 5px;
   opacity: 0.4;
 }
-
+#currentInvestmentLabel{
+  display: flex;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 20px;
+}
 #graphic {
   position: relative;
   display: flex;
@@ -85,6 +92,12 @@ li {
 
 #risk-selector-header {
   display: flex;
+}
+
+#start-over-button{
+  position: absolute;
+  right: 0px;
+  bottom: -15px;
 }
 
 #top-logo {
@@ -147,14 +160,13 @@ text.inner-circle {
   align-items: center;
   align-self: center;
   color: black;
-  height: 40px;
-  width: 88px;
-  border: 3px solid black;
+  height: 56px;
+  width: 100px;
+  border: 2px solid black;
   border-radius: 5px;
   font-size: 17px;
   font-weight: 600;
-  cursor: pointer;
-  background-color: white;
+  background-color: #78b2e2;
   cursor: pointer;
 }
 
@@ -188,23 +200,71 @@ text.inner-circle {
 
 .risk-calculator-input-container {
   display: flex;
-  flex-direction: row;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  font-size: 20px;
+  flex-direction: column;
+  margin-top: 20px;
+  font-size: 17px;
+  background: white;
+  border: 1px solid #e9e9e9;
+  border-radius: 2px;
+}
+
+.risk-calculator-input-labels {
+  margin-top: 10px;
+  font-weight: 600;
+  padding-left: 65px;
+}
+
+.risk-calculator-input-labels  label:nth-child(1){
+  margin-right: 117px;
+}
+.risk-calculator-input-labels  label:nth-child(2){
+  margin-right: 87px;
+}
+
+input:disabled{
+  border: none;
+  text-align: center;
+  color: black;
+}
+
+.risk-calculator-main{
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.risk-calculator-main-row{
+  display: flex;
+  position: relative;
+  margin: 10px;
   align-items: center;
 }
 
-.risk-calculator-input-container input{
+
+.risk-calculator-row-inputs{
+  position: absolute;
+  left: 103px;
+}
+.risk-calculator-row-inputs input:nth-child(1){
+  margin-right: 60px;
+}
+.risk-calculator-row-inputs input:nth-child(2){
+  margin-right: 60px;
+}
+.risk-calculator-row-inputs input{
+  height: 27px;
+  font-size: 12px;
+}
+/*.risk-calculator-input-container input{
   height: 40px;
   width: 200px;
   color: black;
   font-size: 22px;
   margin-left: 3px;
   border-radius: 5px;
-}
+}*/
 
-.risk-calculator-error-message{
+/*.risk-calculator-error-message{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -214,14 +274,19 @@ text.inner-circle {
   color: red;
   margin-left: 13px;
   font-size: 20px;
-}
+}*/
 
 .risk-calculator-label{
   font-size: 34px;
   font-weight: bold;
   align-self: center;
 }
-
+.risk-calculator-label-container{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 40px;
+}
 .risk-calculator-label-risk{
   font-size: 32px;
   font-weight: bold;
