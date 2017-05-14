@@ -6,18 +6,21 @@ class RiskCalculator extends React.Component {
       this.state = {money: 0};
       this.setInput = this.setInput.bind(this);
       this.createTable = this.createTable.bind(this);
+      this.createMain = this.createMain.bind(this);
       this.goToSelector = this.goToSelector.bind(this);
       this.calculateAllocation = this.calculateAllocation.bind(this);
   }
 
   setInput(e){
+console.log("in set input");
     e.preventDefault()
     $('.risk-calculator-error-message')[0].innerHTML = "";
     let input = $(e.target)[0].value;
     if(/\D/.test(input)){
       $('.risk-calculator-error-message')[0].innerHTML = "Please use digits.";
     } else {
-      this.setState({ money: $(e.target)[0].value });
+      this.setState({ money: this.state.money + $(e.target)[0].value });
+console.log(this.state.money);
     }
   }
 
@@ -37,6 +40,21 @@ class RiskCalculator extends React.Component {
     return [riskPercents.map(percent => {
       return Math.ceil(100*(percent * this.state.money))/100
     }), riskRowValues]
+  }
+
+
+  createMain(){
+    ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"].forEach(function(label){
+      $('.risk-calculator-main').append(`
+        <div style='display:flex;position:relative;margin:10px;align-items:center;'>
+            <label>${label} $:</label>
+            <div style='position:absolute;left:103px;'>
+              <input style='height:27px;font-size:12px;margin-right:60px;' type='text'/>
+              <input style='height:27px;font-size:12px;margin-right:60px;' disabled type='text'/>
+              <input style='height:27px;font-size:12px;' disabled type='text'/>
+            </div>
+        </div>`)
+    })
   }
 
   createTable(){
@@ -74,6 +92,7 @@ class RiskCalculator extends React.Component {
 
   componentDidMount(){
     this.createTable();
+    this.createMain();
   }
 
   componentDidUpdate(){
@@ -86,44 +105,18 @@ class RiskCalculator extends React.Component {
           <div className="risk-calculator-label">Personalized Portfolio</div>
           <div className="risk-calculator-label-container">
             <div className="risk-calculator-label-risk">Risk Level {this.props.risk.risk.risk}</div>
-            <div className="button" id="start-over-button" onClick={this.goToSelector}>Start Over</div>
           </div>
           <div id="customRiskTable"></div>
-          <div id="currentInvestmentLabel">Please Enter Your Current Portfolio</div>
+          <div id="currentInvestmentContainer">Please Enter Your Current Portfolio
+            <div className="button" id="rebalance-button" onClick={this.goToSelector}>Rebalance</div>
+          </div>
           <div className="risk-calculator-input-container">
               <div className="risk-calculator-input-labels">
                   <label>Current Investment</label>
                   <label>Difference</label>
                   <label>New Investment</label>
               </div>
-              <div className="risk-calculator-main">
-                <div className="risk-calculator-main-row">
-                  <label>Bonds $:</label>
-                  <div className="risk-calculator-row-inputs">
-                    <input type="text"/>
-                    <input disabled type="text"/>
-                    <input disabled type="text"/>
-                  </div>
-                </div>
-                <div className="risk-calculator-main-row">
-                  <label>Small Cap $:</label>
-                  <div className="risk-calculator-row-inputs">
-                    <input type="text"/>
-                    <input type="text"/>
-                    <input type="text"/>
-                  </div>
-                </div>
-                <div className="risk-calculator-main-row">
-                  <label>Large Cap $:</label>
-                  <div className="risk-calculator-row-inputs">
-                    <input type="text"/>
-                    <input type="text"/>
-                    <input type="text"/>
-                  </div>
-                </div>
-
-              </div>
-
+              <div className="risk-calculator-main"></div>
           </div>
       </div>
     );
