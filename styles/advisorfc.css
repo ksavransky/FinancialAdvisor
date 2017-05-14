@@ -36,11 +36,13 @@ li {
 }
 #currentInvestmentContainer{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   font-size: 22px;
   font-weight: 600;
   margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 #graphic {
   position: relative;
@@ -96,11 +98,16 @@ li {
 }
 
 #rebalance-button{
-
+  height: 40px;
 }
 
 #top-logo {
-  visibility: hidden;
+  position: absolute;
+  left: 0px;
+  width: 52px;
+  height: auto;
+  margin: 25px;
+  cursor: pointer;
 }
 
 #view-logo {
@@ -217,37 +224,60 @@ text.inner-circle {
 }
 
 .risk-calculator-input-labels  label:nth-child(1){
-  margin-right: 117px;
+  margin-right: 61px;
 }
 .risk-calculator-input-labels  label:nth-child(2){
-  margin-right: 87px;
+  margin-right: 32px;
+}
+.risk-calculator-input-labels  label:nth-child(3){
+  margin-right: 13px;
 }
 
+input {
+  height: 27px;
+  width: 100px;
+  font-size: 12px;
+  margin-right: 15px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
 input:disabled{
-  border: none;
-  text-align: center;
-  color: black;
+  height: 27px;
+  width: 100px;
+  font-size: 12px;
+  margin-right: 15px;
+  border: 1px solid grey;
+  border-radius: 5px;
 }
 
 .risk-calculator-main{
   display: flex;
   flex-direction: column;
   margin: 10px;
+  position: relative;
 }
 
-/*.risk-calculator-main-row{
-  display: flex;
-  position: relative;
-  margin: 10px;
-  align-items: center;
-}*/
+.risk-calculator-transfers{
+  position: absolute;
+  right: 0px;
+  top: 5px;
+  height: 188px !important;
+  width: 170px !important;
+}
+
+.risk-calculator-main-row{
+  display:flex;
+  position:relative;
+  margin:10px;
+  align-items:center;
+}
 
 
 /*.risk-calculator-row-inputs{
   position: absolute;
   left: 103px;
 }*/
-.risk-calculator-row-inputs input:nth-child(1){
+/*.risk-calculator-row-inputs input:nth-child(1){
   margin-right: 60px;
 }
 .risk-calculator-row-inputs input:nth-child(2){
@@ -256,7 +286,7 @@ input:disabled{
 .risk-calculator-row-inputs input{
   height: 27px;
   font-size: 12px;
-}
+}*/
 /*.risk-calculator-input-container input{
   height: 40px;
   width: 200px;

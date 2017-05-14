@@ -4,24 +4,29 @@ class RiskCalculator extends React.Component {
   constructor(props) {
       super(props);
       this.state = {money: 0};
-      this.setInput = this.setInput.bind(this);
       this.createTable = this.createTable.bind(this);
       this.createMain = this.createMain.bind(this);
-      this.goToSelector = this.goToSelector.bind(this);
       this.calculateAllocation = this.calculateAllocation.bind(this);
+      this.rebalance = this.rebalance.bind(this);
+      this.checkErrorsAndSetTotal = this.checkErrorsAndSetTotal.bind(this);
   }
 
-  setInput(e){
-console.log("in set input");
-    e.preventDefault()
-    $('.risk-calculator-error-message')[0].innerHTML = "";
-    let input = $(e.target)[0].value;
-    if(/\D/.test(input)){
-      $('.risk-calculator-error-message')[0].innerHTML = "Please use digits.";
-    } else {
-      this.setState({ money: this.state.money + $(e.target)[0].value });
-console.log(this.state.money);
-    }
+  checkErrorsAndSetTotal(){
+    let totalAmount = 0;
+    $('.risk-calculator-main-input').each(function(idx){
+      if(/\D/.test(this.value) || this.value < 0){
+          $('.risk-calculator-transfers')[0].innerHTML = "Please use only positive digits when entering current amount.";
+          totalAmount = 0;
+      } else {
+        totalAmount += parseInt(this.value);
+      }
+    })
+    console.log("setting total amount of $ to: " + totalAmount);
+    this.setState({ money: totalAmount});
+  }
+
+  rebalance(){
+      this.checkErrorsAndSetTotal()
   }
 
   calculateAllocation(){
@@ -37,21 +42,24 @@ console.log(this.state.money);
           }
       });
 
-    return [riskPercents.map(percent => {
+
+    let theReturn = [riskPercents.map(percent => {
       return Math.ceil(100*(percent * this.state.money))/100
     }), riskRowValues]
+    console.log(theReturn);
+    return theReturn;
   }
 
 
   createMain(){
     ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"].forEach(function(label){
       $('.risk-calculator-main').append(`
-        <div style='display:flex;position:relative;margin:10px;align-items:center;'>
+        <div class='risk-calculator-main-row'>
             <label>${label} $:</label>
             <div style='position:absolute;left:103px;'>
-              <input style='height:27px;font-size:12px;margin-right:60px;' type='text'/>
-              <input style='height:27px;font-size:12px;margin-right:60px;' disabled type='text'/>
-              <input style='height:27px;font-size:12px;' disabled type='text'/>
+              <input class='risk-calculator-main-input' type='text'/>
+              <input disabled type='text'/>
+              <input disabled type='text'/>
             </div>
         </div>`)
     })
@@ -61,9 +69,7 @@ console.log(this.state.money);
     let allocation = this.calculateAllocation();
 
     let customRisk = [{"Bonds": allocation[1][0] + "%", "Large Cap": allocation[1][1] + "%", "Mid Cap": allocation[1][2] + "%",
-                      "Foreign": allocation[1][3] + "%", "Small Cap": allocation[1][4] + "%"},
-                      { "Bonds": "$" + allocation[0][0], "Large Cap": "$" + allocation[0][1], "Mid Cap": "$" + allocation[0][2],
-                      "Foreign": "$" + allocation[0][3], "Small Cap": "$" + allocation[0][4] }];
+                      "Foreign": allocation[1][3] + "%", "Small Cap": allocation[1][4] + "%"}];
 
     $("#customRiskTable").jsGrid({
         width: "700px",
@@ -86,9 +92,6 @@ console.log(this.state.money);
         ]
     });
   }
-  goToSelector() {
-    this.props.history.push('/home');
-  }
 
   componentDidMount(){
     this.createTable();
@@ -97,6 +100,7 @@ console.log(this.state.money);
 
   componentDidUpdate(){
     this.createTable();
+    this.calculateAllocation();
   }
 
   render() {
@@ -108,15 +112,18 @@ console.log(this.state.money);
           </div>
           <div id="customRiskTable"></div>
           <div id="currentInvestmentContainer">Please Enter Your Current Portfolio
-            <div className="button" id="rebalance-button" onClick={this.goToSelector}>Rebalance</div>
+            <div className="button" id="rebalance-button" onClick={this.rebalance}>Rebalance</div>
           </div>
           <div className="risk-calculator-input-container">
               <div className="risk-calculator-input-labels">
-                  <label>Current Investment</label>
+                  <label>Current Amount</label>
                   <label>Difference</label>
-                  <label>New Investment</label>
+                  <label>New Amount</label>
+                  <label>Recommended Transfers</label>
               </div>
-              <div className="risk-calculator-main"></div>
+              <div className="risk-calculator-main">
+                <input className='risk-calculator-transfers' type='text' disabled/>
+              </div>
           </div>
       </div>
     );
