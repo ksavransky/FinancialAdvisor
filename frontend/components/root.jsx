@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { IndexRoute, hashHistory, Redirect } from 'react-router';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
-import AppFC from './appf';
+import App from './app';
 
 import RiskSelectorContainer from './risk_selector/risk_selector_container.jsx';
 import RiskCalculatorContainer from './risk_calculator/risk_calculator_container.jsx';
@@ -17,7 +17,7 @@ const Root = ({ store }) => {
     <Provider store={store}>
       <Router>
          <div className="react-root">
-          <Route path="/" component={AppFC}></Route>
+          <Route path="/" component={App}></Route>
           <Route exact path="/" render={() => (
               <Redirect to="/home"/>
           )}/>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-const AppFC = ({ children }) => (
+const App = ({ children }) => (
   <div className="nav">
     <img id="top-logo" src="../../app/assets/images/home.ico"/>
     <div className="app-title">Financial Advisor</div>
@@ -9,4 +9,4 @@ const AppFC = ({ children }) => (
   </div>
 );
 
-export default AppFC;
+export default App;
