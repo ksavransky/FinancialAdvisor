@@ -18,8 +18,9 @@ class RiskSelector extends React.Component {
           { "Risk": 8, "Bonds %": 10, "Large Cap %": 20, "Mid Cap %": 40, "Foreign %": 20, "Small Cap %": 10  },
           { "Risk": 9, "Bonds %": 0, "Large Cap %": 20, "Mid Cap %": 40, "Foreign %": 25, "Small Cap %": 15  },
           { "Risk": 10, "Bonds %": 0, "Large Cap %": 10, "Mid Cap %": 20, "Foreign %": 30, "Small Cap %": 40  },
-{ "Risk": 11, "Bonds %": 10, "Large Cap %": 10, "Mid Cap %": 25, "Foreign %": 25, "Small Cap %": 40  }
-      ]
+          { "Risk": 11, "Bonds %": 10, "Large Cap %": 10, "Mid Cap %": 25, "Foreign %": 25, "Small Cap %": 40  }
+      ],
+      labels: ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"]
     };
     this.setRisk = this.setRisk.bind(this);
     this.createNumList = this.createNumList.bind(this);
@@ -91,7 +92,7 @@ createNumList(){
   }
 
   componentWillUnmount(){
-    this.props.receiveRisk({"risk": parseInt(this.state.risk), "riskTable": this.state.riskTable});
+    this.props.receiveRisk({"risk": parseInt(this.state.risk), "riskTable": this.state.riskTable, "labels": this.state.labels});
   }
 
   render() {
@@ -110,7 +111,7 @@ createNumList(){
         </div>
         <div id="graphic">
           <Table riskTable={this.state.riskTable}/>
-          <DonutChart riskLevel={this.state.risk} riskTable={this.state.riskTable}/>
+          <DonutChart riskLevel={this.state.risk} riskTable={this.state.riskTable} labels={this.state.labels}/>
           <div id="view-logo" onClick={this.changeGraphic}><img src="../app/assets/images/donutlogo.png"/></div>
         </div>
       </div>

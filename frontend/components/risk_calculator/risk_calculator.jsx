@@ -36,33 +36,26 @@ class RiskCalculator extends React.Component {
   }
 
 
-  recordTransfers(differences, counter = 0){
-    let labels = ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"];
+  recordTransfers(differences){
+    let labels = this.props.risk.risk.labels;
     let newDifferences = differences.slice(0);
 
-    function sortNumber(a,b) {
-        return a - b;
-    }
+    function sortNumber(a,b) {return a - b;}
     let sortedDiff = differences.sort(sortNumber)
 
-    // console.log("sorted differences: " + sortedDiff);
     let transferMade = false;
     let smallestFittingDeficit = null;
     sortedDiff.slice(0).reverse().forEach(function(surplus){
-       // starting with the largest surplus, iterate
        if(!transferMade && surplus > 0){
-         // compare surplus to deficiet starting with deficits starting with smallest; find the smallest deficit into which the surplus fits
           sortedDiff.forEach(function(deficit){
-          // console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + deficit)
-          if(surplus + deficit <= 0){
-              smallestFittingDeficit = deficit;
-            }
+              if(surplus + deficit <= 0){
+                smallestFittingDeficit = deficit;
+              }
           })
 
           if(smallestFittingDeficit){
-          // console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + smallestFittingDeficit + " and the surplus + deficit is " + surplus + smallestFittingDeficit)
-              let surplusIdx = newDifferences.indexOf(surplus)
-              let deficitIdx = newDifferences.indexOf(smallestFittingDeficit)
+              let surplusIdx = newDifferences.indexOf(surplus);
+              let deficitIdx = newDifferences.indexOf(smallestFittingDeficit);
               newDifferences[surplusIdx] = 0;
               newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
               let transferString = `Transfer $${Math.ceil(100*surplus)/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.\n`
@@ -81,7 +74,6 @@ class RiskCalculator extends React.Component {
               let deficitIdx = newDifferences.indexOf(smallestDeficit);
               newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
               newDifferences[deficitIdx] = 0;
-
               let transferString = `Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.\n`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
@@ -91,11 +83,8 @@ class RiskCalculator extends React.Component {
       })
     }
 
-    let newLastLargestNumber = newDifferences.slice(0).sort(sortNumber).reverse()[0]
-
-    counter += 1
-    if(newLastLargestNumber !== 0 && counter < 10){
-      this.recordTransfers(newDifferences, counter += 1);
+    if(newDifferences.filter(function(x){return x==0}).length < 4){
+      this.recordTransfers(newDifferences);
     }
   }
 
@@ -143,7 +132,7 @@ class RiskCalculator extends React.Component {
 
 
   createMain(){
-    ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"].forEach(function(label){
+    this.props.risk.risk.labels.forEach(function(label){
       $('.risk-calculator-main').append(`
         <div class='risk-calculator-main-row'>
             <label>${label} $:</label>

@@ -17,7 +17,7 @@ class DonutChart extends React.Component {
     var riskLabels = ["","","","",""];
 
     if (risk !== 0){
-      riskLabels = ["Bonds","Large Cap","Mid Cap","Foreign","Small Cap"]
+      riskLabels = this.props.labels.slice(0);
       riskAmounts = [riskRow["Bonds %"], riskRow["Large Cap %"],
                         riskRow["Mid Cap %"], riskRow["Foreign %"], riskRow["Small Cap %"]];
       riskAmounts.forEach((amount, idx) => {
