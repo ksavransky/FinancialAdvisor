@@ -8,7 +8,9 @@ class RiskCalculator extends React.Component {
       this.createMain = this.createMain.bind(this);
       this.calculateAllocation = this.calculateAllocation.bind(this);
       this.rebalance = this.rebalance.bind(this);
+      this.recordTransfers = this.recordTransfers.bind(this);
       this.checkErrorsAndSetTotal = this.checkErrorsAndSetTotal.bind(this);
+      this.recordNewAmountAndDifference = this.recordNewAmountAndDifference.bind(this);
   }
 
   checkErrorsAndSetTotal(){
@@ -29,6 +31,99 @@ class RiskCalculator extends React.Component {
       this.checkErrorsAndSetTotal()
   }
 
+
+  recordTransfers(differences, counter = 0){
+    let labels = ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"];
+console.log("differences: " + differences);
+    let newDifferences = differences.slice(0);
+
+    function sortNumber(a,b) {
+        return a - b;
+    }
+    let sortedDiff = differences.sort(sortNumber)
+
+console.log("sorted differences: " + sortedDiff);
+
+    let transferMade = false;
+    let smallestFittingDeficit = null;
+    sortedDiff.slice(0).reverse().forEach(function(surplus){
+       // starting with the largest surplus, iterate
+       if(!transferMade && surplus > 0){
+       // compare surplus to deficiet starting with deficits starting with smallest
+       // find the smallest deficit into which the surplus fits
+         sortedDiff.forEach(function(deficit){
+console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + deficit)
+
+        if(surplus + deficit <= 0){
+            smallestFittingDeficit = deficit;
+          }
+        })
+        if(smallestFittingDeficit){
+
+console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + smallestFittingDeficit + " and the surplus + deficit is " + surplus + smallestFittingDeficit)
+            let surplusIdx = newDifferences.indexOf(surplus)
+            let deficitIdx = newDifferences.indexOf(smallestFittingDeficit)
+            newDifferences[surplusIdx] = 0;
+            newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
+console.log(transferString)
+            let transferString = `• Transfer $${surplus} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+            $('.risk-calculator-transfers')[0].innerHTML += transferString;
+            transferMade = true;
+}
+
+       }
+    })
+
+    if(!transferMade){
+      sortedDiff.forEach(function(smallestSurplus){
+        if(smallestSurplus > 0){
+          sortedDiff.slice(0).reverse().forEach(function(smallestDeficit){
+            if(!transferMade && smallestDeficit < 0){
+              let surplusIdx = newDifferences.indexOf(smallestSurplus);
+              let deficitIdx = newDifferences.indexOf(smallestDeficit);
+
+              newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
+              newDifferences[deficitIdx] = 0;
+
+              let transferString = `• Transfer $${smallestSurplus} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+              $('.risk-calculator-transfers')[0].innerHTML += transferString;
+              transferMade = true;
+            }
+          })
+        }
+      })
+    }
+
+console.log(newDifferences)
+    if(newDifferences.slice(0).sort(sortNumber).reverse()[0] !== 0){
+    // if(counter < 5){
+      console.log('going to recurse');
+      // this.recordTransfers(newDifferences, counter += 1);
+      this.recordTransfers(newDifferences);
+    }
+
+  }
+
+  recordNewAmountAndDifference(){
+    let allocation = this.calculateAllocation();
+    let differences = [];
+    allocation[0].forEach(function(newAmount, idx){
+      $('.risk-calculator-main-new')[idx].value = newAmount;
+      $($('.risk-calculator-main-new')[idx]).css('color', 'blue');
+      let inputAmount = $('.risk-calculator-main-input')[idx].value;
+      let difference = newAmount - inputAmount;
+      if (difference >= 0){
+        $('.risk-calculator-main-difference')[idx].value = "+" + difference;
+        $($('.risk-calculator-main-difference')[idx]).css('color', 'green');
+      }  else if (difference < 0){
+        $('.risk-calculator-main-difference')[idx].value = difference;
+        $($('.risk-calculator-main-difference')[idx]).css('color', 'red');
+      }
+      differences.push(difference);
+    })
+    this.recordTransfers(differences);
+ }
+
   calculateAllocation(){
     let risk = this.props.risk;
     let riskLevel = risk.risk.risk;
@@ -42,12 +137,9 @@ class RiskCalculator extends React.Component {
           }
       });
 
-
-    let theReturn = [riskPercents.map(percent => {
+    return [riskPercents.map(percent => {
       return Math.ceil(100*(percent * this.state.money))/100
     }), riskRowValues]
-    console.log(theReturn);
-    return theReturn;
   }
 
 
@@ -58,8 +150,8 @@ class RiskCalculator extends React.Component {
             <label>${label} $:</label>
             <div style='position:absolute;left:103px;'>
               <input class='risk-calculator-main-input' type='text'/>
-              <input disabled type='text'/>
-              <input disabled type='text'/>
+              <input class='risk-calculator-main-difference' disabled type='text'/>
+              <input class='risk-calculator-main-new' disabled type='text'/>
             </div>
         </div>`)
     })
@@ -99,8 +191,7 @@ class RiskCalculator extends React.Component {
   }
 
   componentDidUpdate(){
-    this.createTable();
-    this.calculateAllocation();
+    this.recordNewAmountAndDifference();
   }
 
   render() {
@@ -122,7 +213,7 @@ class RiskCalculator extends React.Component {
                   <label>Recommended Transfers</label>
               </div>
               <div className="risk-calculator-main">
-                <input className='risk-calculator-transfers' type='text' disabled/>
+                <div className='risk-calculator-transfers'></div>
               </div>
           </div>
       </div>

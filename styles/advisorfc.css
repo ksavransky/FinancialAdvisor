@@ -235,19 +235,21 @@ text.inner-circle {
 
 input {
   height: 27px;
-  width: 100px;
+  width: 95px;
   font-size: 12px;
   margin-right: 15px;
   border: 1px solid black;
   border-radius: 5px;
+  padding-left: 5px;
 }
 input:disabled{
   height: 27px;
-  width: 100px;
+  width: 95px;
   font-size: 12px;
   margin-right: 15px;
   border: 1px solid grey;
   border-radius: 5px;
+  padding-left: 5px;
 }
 
 .risk-calculator-main{
@@ -263,6 +265,10 @@ input:disabled{
   top: 5px;
   height: 188px !important;
   width: 170px !important;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 16px;
 }
 
 .risk-calculator-main-row{
