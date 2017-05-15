@@ -85,7 +85,7 @@ console.log(transferString)
               newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
               newDifferences[deficitIdx] = 0;
 
-              let transferString = `• Transfer $${smallestSurplus} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+              let transferString = `• Transfer $${smallestSurplus - (smallestSurplus + smallestDeficit)} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
             }
