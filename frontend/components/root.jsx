@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { IndexRoute, hashHistory, Redirect } from 'react-router';
 import { HashRouter as Router, Route } from 'react-router-dom';
 
-import AppFC from './appfc';
+import AppFC from './appf';
 
 import RiskSelectorContainer from './risk_selector/risk_selector_container.jsx';
 import RiskCalculatorContainer from './risk_calculator/risk_calculator_container.jsx';

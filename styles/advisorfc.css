@@ -261,7 +261,7 @@ input:disabled{
 
 .risk-calculator-transfers{
   position: absolute;
-  right: 0px;
+  right: 10px;
   top: 5px;
   height: 188px !important;
   width: 170px !important;
