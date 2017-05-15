@@ -34,7 +34,6 @@ class RiskCalculator extends React.Component {
 
   recordTransfers(differences, counter = 0){
     let labels = ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"];
-console.log("differences: " + differences);
     let newDifferences = differences.slice(0);
 
     function sortNumber(a,b) {
@@ -42,35 +41,30 @@ console.log("differences: " + differences);
     }
     let sortedDiff = differences.sort(sortNumber)
 
-console.log("sorted differences: " + sortedDiff);
-
+    // console.log("sorted differences: " + sortedDiff);
     let transferMade = false;
     let smallestFittingDeficit = null;
     sortedDiff.slice(0).reverse().forEach(function(surplus){
        // starting with the largest surplus, iterate
        if(!transferMade && surplus > 0){
-       // compare surplus to deficiet starting with deficits starting with smallest
-       // find the smallest deficit into which the surplus fits
-         sortedDiff.forEach(function(deficit){
-console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + deficit)
+         // compare surplus to deficiet starting with deficits starting with smallest; find the smallest deficit into which the surplus fits
+          sortedDiff.forEach(function(deficit){
+          // console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + deficit)
+          if(surplus + deficit <= 0){
+              smallestFittingDeficit = deficit;
+            }
+          })
 
-        if(surplus + deficit <= 0){
-            smallestFittingDeficit = deficit;
+          if(smallestFittingDeficit){
+          // console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + smallestFittingDeficit + " and the surplus + deficit is " + surplus + smallestFittingDeficit)
+              let surplusIdx = newDifferences.indexOf(surplus)
+              let deficitIdx = newDifferences.indexOf(smallestFittingDeficit)
+              newDifferences[surplusIdx] = 0;
+              newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
+              let transferString = `• Transfer $${Math.ceil(100*surplus)/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+              $('.risk-calculator-transfers')[0].innerHTML += transferString;
+              transferMade = true;
           }
-        })
-        if(smallestFittingDeficit){
-
-console.log("in inner each and the surplus is: " + surplus + " and the deficit is: " + smallestFittingDeficit + " and the surplus + deficit is " + surplus + smallestFittingDeficit)
-            let surplusIdx = newDifferences.indexOf(surplus)
-            let deficitIdx = newDifferences.indexOf(smallestFittingDeficit)
-            newDifferences[surplusIdx] = 0;
-            newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
-console.log(transferString)
-            let transferString = `• Transfer $${surplus} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
-            $('.risk-calculator-transfers')[0].innerHTML += transferString;
-            transferMade = true;
-}
-
        }
     })
 
@@ -85,7 +79,7 @@ console.log(transferString)
               newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
               newDifferences[deficitIdx] = 0;
 
-              let transferString = `• Transfer $${smallestSurplus - (smallestSurplus + smallestDeficit)} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+              let transferString = `• Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
             }
@@ -94,33 +88,35 @@ console.log(transferString)
       })
     }
 
-console.log(newDifferences)
-    if(newDifferences.slice(0).sort(sortNumber).reverse()[0] !== 0){
-    // if(counter < 5){
-      console.log('going to recurse');
-      // this.recordTransfers(newDifferences, counter += 1);
-      this.recordTransfers(newDifferences);
-    }
+    let newLastLargestNumber = newDifferences.slice(0).sort(sortNumber).reverse()[0]
 
+    counter += 1
+    if(newLastLargestNumber !== 0 && counter < 10){
+      this.recordTransfers(newDifferences, counter += 1);
+    }
   }
 
   recordNewAmountAndDifference(){
     let allocation = this.calculateAllocation();
     let differences = [];
+
     allocation[0].forEach(function(newAmount, idx){
       $('.risk-calculator-main-new')[idx].value = newAmount;
       $($('.risk-calculator-main-new')[idx]).css('color', 'blue');
       let inputAmount = $('.risk-calculator-main-input')[idx].value;
-      let difference = newAmount - inputAmount;
+      let difference = Math.ceil(100*(newAmount - inputAmount))/100;
+
       if (difference >= 0){
         $('.risk-calculator-main-difference')[idx].value = "+" + difference;
         $($('.risk-calculator-main-difference')[idx]).css('color', 'green');
-      }  else if (difference < 0){
+      } else if (difference < 0){
         $('.risk-calculator-main-difference')[idx].value = difference;
         $($('.risk-calculator-main-difference')[idx]).css('color', 'red');
       }
       differences.push(difference);
     })
+
+    $('.risk-calculator-transfers')[0].innerHTML = "";
     this.recordTransfers(differences);
  }
 
