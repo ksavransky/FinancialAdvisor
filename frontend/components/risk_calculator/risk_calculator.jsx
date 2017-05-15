@@ -15,16 +15,20 @@ class RiskCalculator extends React.Component {
 
   checkErrorsAndSetTotal(){
     let totalAmount = 0;
+    let validInput = true;
     $('.risk-calculator-main-input').each(function(idx){
-      if(/\D/.test(this.value) || this.value < 0){
-          $('.risk-calculator-transfers')[0].innerHTML = "Please use only positive digits when entering current amount.";
-          totalAmount = 0;
+      if(/\D/.test(this.value) || this.value < 0 || this.value == ""){
+          $('.risk-calculator-transfers')[0].innerHTML = "Please use only positive digits or zero when entering current amounts.";
+          $($('.risk-calculator-transfers')[0]).css('color', 'red');
+          validInput = false;
       } else {
         totalAmount += parseInt(this.value);
       }
     })
-    console.log("setting total amount of $ to: " + totalAmount);
-    this.setState({ money: totalAmount});
+    if(validInput){
+      $($('.risk-calculator-transfers')[0]).css('color', 'black');
+      this.setState({money: totalAmount});
+    }
   }
 
   rebalance(){
@@ -61,7 +65,7 @@ class RiskCalculator extends React.Component {
               let deficitIdx = newDifferences.indexOf(smallestFittingDeficit)
               newDifferences[surplusIdx] = 0;
               newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
-              let transferString = `• Transfer $${Math.ceil(100*surplus)/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+              let transferString = `Transfer $${Math.ceil(100*surplus)/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.\n`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
           }
@@ -75,11 +79,10 @@ class RiskCalculator extends React.Component {
             if(!transferMade && smallestDeficit < 0){
               let surplusIdx = newDifferences.indexOf(smallestSurplus);
               let deficitIdx = newDifferences.indexOf(smallestDeficit);
-
               newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
               newDifferences[deficitIdx] = 0;
 
-              let transferString = `• Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]} \n`
+              let transferString = `Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.\n`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
             }
