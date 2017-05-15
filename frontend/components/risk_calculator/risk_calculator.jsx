@@ -60,7 +60,7 @@ class RiskCalculator extends React.Component {
               let deficitIdx = newDifferences.indexOf(smallestFittingDeficit);
               newDifferences[surplusIdx] = 0;
               newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
-              let transferString = `<div>• Transfer $${Math.ceil(100*surplus)/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.</div>`
+              let transferString = `<div>• Transfer $${Math.ceil(100*surplus)/100} from ${labels[deficitIdx]} to ${labels[surplusIdx]}.</div>`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
           }
@@ -76,7 +76,7 @@ class RiskCalculator extends React.Component {
               let deficitIdx = newDifferences.indexOf(smallestDeficit);
               newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
               newDifferences[deficitIdx] = 0;
-              let transferString = `<div>• Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.</div>`
+              let transferString = `<div>• Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[deficitIdx]} to ${labels[surplusIdx]}.</div>`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
               transferMade = true;
             }
