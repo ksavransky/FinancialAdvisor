@@ -18,7 +18,7 @@ class RiskCalculator extends React.Component {
     let validInput = true;
     $('.risk-calculator-main-input').each(function(idx){
       if(/\D/.test(this.value) || this.value < 0 || this.value == ""){
-          $('.risk-calculator-transfers')[0].innerHTML = "Please use only positive digits or zero when entering current amounts.";
+          $('.risk-calculator-transfers')[0].innerHTML = "Please use only positive digits or zero when entering current amounts. Please enter all inputs correctly.";
           $($('.risk-calculator-transfers')[0]).css('color', 'red');
           validInput = false;
       } else {
@@ -32,7 +32,9 @@ class RiskCalculator extends React.Component {
   }
 
   rebalance(){
-      this.checkErrorsAndSetTotal()
+    if($('#rebalance-button').css('opacity') == 1.0){
+          this.checkErrorsAndSetTotal();
+    }
   }
 
 
@@ -141,7 +143,21 @@ class RiskCalculator extends React.Component {
               <input class='risk-calculator-main-difference' disabled type='text'/>
               <input class='risk-calculator-main-new' disabled type='text'/>
             </div>
-        </div>`)
+        </div>
+        <script>
+          $('.risk-calculator-main-input').keyup(function() {
+              var allInputsEntered = true;
+              $('.risk-calculator-main-input').each(function(el){
+                if($(this)[0].value == ""){
+                  allInputsEntered = false;
+                  $('#rebalance-button').css('opacity','0.4');
+                }
+              })
+              if(allInputsEntered){
+                $('#rebalance-button').css('opacity','1.0');
+              }
+          });
+        </script>`)
     })
   }
 
@@ -182,7 +198,7 @@ class RiskCalculator extends React.Component {
     this.recordNewAmountAndDifference();
   }
 
-  render() {
+  render(){
     return(
       <div className="risk-calculator-container">
           <div className="risk-calculator-label">Personalized Portfolio</div>
