@@ -283,6 +283,10 @@ text.inner-circle {
   margin:10px;
   align-items:center;
 }
+.risk-calculator-main-row-box{
+  position: absolute;
+  left: 103px;
+}
 
 .risk-calculator-main-row input:nth-child(1){
   -webkit-animation: pulse 0.7s;

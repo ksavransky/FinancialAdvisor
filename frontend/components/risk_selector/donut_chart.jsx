@@ -132,7 +132,6 @@ class DonutChart extends React.Component {
             y = text.attr("y"),
             dy = parseFloat(text.attr("dy")),
             tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-        console.log("tspan: " + tspan);
         while (word = words.pop()) {
           line.push(word);
           tspan.text(line.join(" "));

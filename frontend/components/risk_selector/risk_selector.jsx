@@ -22,13 +22,25 @@ class RiskSelector extends React.Component {
       ],
       labels: ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"]
     };
-    this.setRisk = this.setRisk.bind(this);
-    this.processClick = this.processClick.bind(this);
+    this.changeGraphicIcon = this.changeGraphicIcon.bind(this);
     this.createNumList = this.createNumList.bind(this);
     this.highlightNumber = this.highlightNumber.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
     this.goToCalculator = this.goToCalculator.bind(this);
-    this.changeGraphicIcon = this.changeGraphicIcon.bind(this);
+    this.processClick = this.processClick.bind(this);
+    this.setRisk = this.setRisk.bind(this);
+  }
+
+  changeGraphicIcon(){
+    if($('#donut-chart').css('display') == 'none'){
+      $('#donut-chart').css('display', 'block');
+      $('#jsGrid').css('display', 'none');
+      $("#view-logo img").attr("src","../app/assets/images/chartlogo.jpg");
+    } else {
+      $('#donut-chart').css('display', 'none');
+      $('#jsGrid').css('display', 'block');
+      $("#view-logo img").attr("src","../app/assets/images/donutlogo.png");
+    }
   }
 
   createNumList(){
@@ -49,18 +61,6 @@ class RiskSelector extends React.Component {
             that.setRisk();
       }, 100);
     }
-  }
-
-  setRisk() {
-    this.highlightRow();
-    this.highlightNumber();
-    $('#continue').css('opacity', '1.0');
-  }
-
-  processClick(e) {
-    e.preventDefault();
-    this.setState({ risk: e.target.innerHTML });
-    this.setRisk();
   }
 
   highlightNumber(){
@@ -87,16 +87,16 @@ class RiskSelector extends React.Component {
     }
   }
 
-  changeGraphicIcon(){
-    if($('#donut-chart').css('display') == 'none'){
-      $('#donut-chart').css('display', 'block');
-      $('#jsGrid').css('display', 'none');
-      $("#view-logo img").attr("src","../app/assets/images/chartlogo.jpg");
-    } else {
-      $('#donut-chart').css('display', 'none');
-      $('#jsGrid').css('display', 'block');
-      $("#view-logo img").attr("src","../app/assets/images/donutlogo.png");
-    }
+  processClick(e) {
+    e.preventDefault();
+    this.setState({ risk: e.target.innerHTML });
+    this.setRisk();
+  }
+
+  setRisk() {
+    this.highlightRow();
+    this.highlightNumber();
+    $('#continue').css('opacity', '1.0');
   }
 
   componentDidMount() {
@@ -104,7 +104,11 @@ class RiskSelector extends React.Component {
   }
 
   componentWillUnmount(){
-    this.props.receiveRisk({"level": parseInt(this.state.risk), "table": this.state.riskTable, "labels": this.state.labels});
+    let portfolio = ["", "", "", "", ""];
+    if(this.props.riskState.risk){
+      portfolio = this.props.riskState.risk.portfolio;
+    }
+    this.props.receiveRisk({"level": parseInt(this.state.risk), "table": this.state.riskTable, "labels": this.state.labels, "portfolio": portfolio});
   }
 
   render() {

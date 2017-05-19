@@ -4,13 +4,32 @@ class RiskCalculator extends React.Component {
   constructor(props) {
       super(props);
       this.state = {money: 0};
-      this.createTable = this.createTable.bind(this);
-      this.createMain = this.createMain.bind(this);
       this.calculateAllocation = this.calculateAllocation.bind(this);
-      this.rebalance = this.rebalance.bind(this);
-      this.recordTransfers = this.recordTransfers.bind(this);
       this.checkErrorsAndSetTotal = this.checkErrorsAndSetTotal.bind(this);
+      this.createTable = this.createTable.bind(this);
+      this.inputCheck = this.inputCheck.bind(this);
+      this.populatePortfolio = this.populatePortfolio.bind(this);
+      this.rebalance = this.rebalance.bind(this);
       this.recordNewAmountAndDifference = this.recordNewAmountAndDifference.bind(this);
+      this.recordTransfers = this.recordTransfers.bind(this);
+  }
+
+  calculateAllocation(){
+    let riskState = this.props.riskState;
+    let riskLevel = riskState.risk.level;
+    let riskRow = riskState.risk.table[riskLevel - 1];
+    let riskRowValues = Object.values(riskRow).slice(1);
+    let riskPercents = riskRowValues.map(value => {
+          if(value == 0){
+           return 0;
+          } else {
+          return value / 100;
+          }
+      });
+
+    return [riskPercents.map(percent => {
+      return Math.ceil(100*(percent * this.state.money))/100
+    }), riskRowValues]
   }
 
   checkErrorsAndSetTotal(){
@@ -31,12 +50,84 @@ class RiskCalculator extends React.Component {
     }
   }
 
+  createTable(){
+    let allocation = this.calculateAllocation();
+
+    let customRisk = [{"Bonds": allocation[1][0] + "%", "Large Cap": allocation[1][1] + "%", "Mid Cap": allocation[1][2] + "%",
+                      "Foreign": allocation[1][3] + "%", "Small Cap": allocation[1][4] + "%"}];
+
+    $("#customRiskTable").jsGrid({
+        width: "700px",
+        height: "70px",
+        align: "center",
+
+        inserting: false,
+        editing: false,
+        sorting: false,
+        paging: false,
+
+        data: customRisk,
+
+        fields: [
+            { name: "Bonds", type: "number", width: 70 },
+            { name: "Large Cap", type: "number", width: 70 },
+            { name: "Mid Cap", type: "number", width: 70 },
+            { name: "Foreign", type: "number", width: 70 },
+            { name: "Small Cap", type: "number", width: 70 }
+        ]
+    });
+  }
+
+  inputCheck(){
+    let allInputsEntered = true;
+    let portfolio = [];
+    $('.risk-calculator-main-input').each(function(){
+      if($(this)[0].value == ""){
+        allInputsEntered = false;
+        $('#rebalance-button').css('opacity','0.4');
+      }
+    })
+    if(allInputsEntered){
+      $('#rebalance-button').css('opacity','1.0');
+    }
+  }
+
+  populatePortfolio(){
+    this.props.riskState.risk.portfolio.forEach(function(amount, idx){
+      $('.risk-calculator-main-input')[idx].value = amount;
+    })
+    this.inputCheck();
+  }
+
   rebalance(){
     if($('#rebalance-button').css('opacity') == 1.0){
           this.checkErrorsAndSetTotal();
     }
   }
 
+  recordNewAmountAndDifference(){
+      let allocation = this.calculateAllocation();
+      let differences = [];
+
+      allocation[0].forEach(function(newAmount, idx){
+        $('.risk-calculator-main-new')[idx].value = newAmount;
+        $($('.risk-calculator-main-new')[idx]).css('color', 'blue');
+        let inputAmount = $('.risk-calculator-main-input')[idx].value;
+        let difference = Math.ceil(100*(newAmount - inputAmount))/100;
+
+        if (difference >= 0){
+          $('.risk-calculator-main-difference')[idx].value = "+" + difference;
+          $($('.risk-calculator-main-difference')[idx]).css('color', 'green');
+        } else if (difference < 0){
+          $('.risk-calculator-main-difference')[idx].value = difference;
+          $($('.risk-calculator-main-difference')[idx]).css('color', 'red');
+        }
+        differences.push(difference);
+      })
+
+      $('.risk-calculator-transfers')[0].innerHTML = "";
+      this.recordTransfers(differences);
+   }
 
   recordTransfers(differences){
     let labels = this.props.riskState.risk.labels;
@@ -90,108 +181,9 @@ class RiskCalculator extends React.Component {
     }
   }
 
-  recordNewAmountAndDifference(){
-    let allocation = this.calculateAllocation();
-    let differences = [];
-
-    allocation[0].forEach(function(newAmount, idx){
-      $('.risk-calculator-main-new')[idx].value = newAmount;
-      $($('.risk-calculator-main-new')[idx]).css('color', 'blue');
-      let inputAmount = $('.risk-calculator-main-input')[idx].value;
-      let difference = Math.ceil(100*(newAmount - inputAmount))/100;
-
-      if (difference >= 0){
-        $('.risk-calculator-main-difference')[idx].value = "+" + difference;
-        $($('.risk-calculator-main-difference')[idx]).css('color', 'green');
-      } else if (difference < 0){
-        $('.risk-calculator-main-difference')[idx].value = difference;
-        $($('.risk-calculator-main-difference')[idx]).css('color', 'red');
-      }
-      differences.push(difference);
-    })
-
-    $('.risk-calculator-transfers')[0].innerHTML = "";
-    this.recordTransfers(differences);
- }
-
-  calculateAllocation(){
-    let riskState = this.props.riskState;
-    let riskLevel = riskState.risk.level;
-    let riskRow = riskState.risk.table[riskLevel - 1];
-    let riskRowValues = Object.values(riskRow).slice(1);
-    let riskPercents = riskRowValues.map(value => {
-          if(value == 0){
-           return 0;
-          } else {
-          return value / 100;
-          }
-      });
-
-    return [riskPercents.map(percent => {
-      return Math.ceil(100*(percent * this.state.money))/100
-    }), riskRowValues]
-  }
-
-
-  createMain(){
-    this.props.riskState.risk.labels.forEach(function(label){
-      $('.risk-calculator-main').append(`
-        <div class='risk-calculator-main-row'>
-            <label>${label} $:</label>
-            <div style='position:absolute;left:103px;'>
-              <input class='risk-calculator-main-input' type='text'/>
-              <input class='risk-calculator-main-difference' disabled type='text'/>
-              <input class='risk-calculator-main-new' disabled type='text'/>
-            </div>
-        </div>
-        <script>
-          $('.risk-calculator-main-input').keyup(function() {
-              var allInputsEntered = true;
-              $('.risk-calculator-main-input').each(function(el){
-                if($(this)[0].value == ""){
-                  allInputsEntered = false;
-                  $('#rebalance-button').css('opacity','0.4');
-                }
-              })
-              if(allInputsEntered){
-                $('#rebalance-button').css('opacity','1.0');
-              }
-          });
-        </script>`)
-    })
-  }
-
-  createTable(){
-    let allocation = this.calculateAllocation();
-
-    let customRisk = [{"Bonds": allocation[1][0] + "%", "Large Cap": allocation[1][1] + "%", "Mid Cap": allocation[1][2] + "%",
-                      "Foreign": allocation[1][3] + "%", "Small Cap": allocation[1][4] + "%"}];
-
-    $("#customRiskTable").jsGrid({
-        width: "700px",
-        height: "70px",
-        align: "center",
-
-        inserting: false,
-        editing: false,
-        sorting: false,
-        paging: false,
-
-        data: customRisk,
-
-        fields: [
-            { name: "Bonds", type: "number", width: 70 },
-            { name: "Large Cap", type: "number", width: 70 },
-            { name: "Mid Cap", type: "number", width: 70 },
-            { name: "Foreign", type: "number", width: 70 },
-            { name: "Small Cap", type: "number", width: 70 }
-        ]
-    });
-  }
-
   componentDidMount(){
     this.createTable();
-    this.createMain();
+    this.populatePortfolio();
   }
 
   componentDidUpdate(){
@@ -199,7 +191,11 @@ class RiskCalculator extends React.Component {
   }
 
   componentWillUnmount(){
-    this.props.receiveRisk({"risk": this.props.riskState.risk.level});
+    let portfolio = [];
+    $('.risk-calculator-main-input').each(function(){
+        portfolio.push($(this)[0].value);
+    })
+    this.props.riskState.risk.portfolio = portfolio;
   }
 
   render(){
@@ -221,6 +217,16 @@ class RiskCalculator extends React.Component {
                   <label>Recommended Transfers</label>
               </div>
               <div className="risk-calculator-main">
+                  {this.props.riskState.risk.labels.map((label, key) =>
+                          <div key={key} className='risk-calculator-main-row'>
+                              <label>{label} $:</label>
+                              <div className='risk-calculator-main-row-box'>
+                                <input className='risk-calculator-main-input' onKeyUp={this.inputCheck} type='text'/>
+                                <input className='risk-calculator-main-difference' disabled type='text'/>
+                                <input className='risk-calculator-main-new' disabled type='text'/>
+                              </div>
+                          </div>
+                  )}
                 <div className='risk-calculator-transfers'></div>
               </div>
           </div>
