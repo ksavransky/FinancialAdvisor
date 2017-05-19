@@ -6,7 +6,7 @@ import { receiveRisk } from '../../actions/risk_actions';
 import { riskReducer } from '../../reducers/risk_reducer';
 
 const mapStateToProps = state => ({
-  risk: state.risk,
+  riskState: state.risk,
   state
 });
 

@@ -23,14 +23,15 @@ class RiskSelector extends React.Component {
       labels: ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"]
     };
     this.setRisk = this.setRisk.bind(this);
+    this.processClick = this.processClick.bind(this);
     this.createNumList = this.createNumList.bind(this);
     this.highlightNumber = this.highlightNumber.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
     this.goToCalculator = this.goToCalculator.bind(this);
-    this.changeGraphic = this.changeGraphic.bind(this);
+    this.changeGraphicIcon = this.changeGraphicIcon.bind(this);
   }
 
-createNumList(){
+  createNumList(){
     let ul = document.createElement("ul");
     ul.classList.add('risk-selector-ul');
     $("#risk-selector").append(ul);
@@ -38,17 +39,28 @@ createNumList(){
     for(let i = 0; i < 10; i++){
       let li = document.createElement("li");
       li.innerHTML = `${i + 1}`;
-      li.addEventListener('click', this.setRisk);
+      li.addEventListener('click', this.processClick);
       $(".risk-selector-ul")[0].append(li);
     }
-}
+    if(this.props.riskState.risk){
+      this.setState({ risk: this.props.riskState.risk.level });
+      let that = this;
+      setTimeout(function(){
+            that.setRisk();
+      }, 100);
+    }
+  }
 
-  setRisk(e) {
-    e.preventDefault();
-    this.setState({ risk: e.target.innerHTML });
+  setRisk() {
     this.highlightRow();
     this.highlightNumber();
     $('#continue').css('opacity', '1.0');
+  }
+
+  processClick(e) {
+    e.preventDefault();
+    this.setState({ risk: e.target.innerHTML });
+    this.setRisk();
   }
 
   highlightNumber(){
@@ -75,7 +87,7 @@ createNumList(){
     }
   }
 
-  changeGraphic(){
+  changeGraphicIcon(){
     if($('#donut-chart').css('display') == 'none'){
       $('#donut-chart').css('display', 'block');
       $('#jsGrid').css('display', 'none');
@@ -92,7 +104,7 @@ createNumList(){
   }
 
   componentWillUnmount(){
-    this.props.receiveRisk({"risk": parseInt(this.state.risk), "riskTable": this.state.riskTable, "labels": this.state.labels});
+    this.props.receiveRisk({"level": parseInt(this.state.risk), "table": this.state.riskTable, "labels": this.state.labels});
   }
 
   render() {
@@ -105,14 +117,14 @@ createNumList(){
             <div className="risk-label">High</div>
           </div>
         </div>
-        <div id="risk-selector-header">
+        <div id="risk-selector-button-container">
           <div id="risk-selector"></div>
           <div id="continue" className="button" onClick={this.goToCalculator}>Continue</div>
         </div>
         <div id="graphic">
           <Table riskTable={this.state.riskTable}/>
           <DonutChart riskLevel={this.state.risk} riskTable={this.state.riskTable} labels={this.state.labels}/>
-          <div id="view-logo" onClick={this.changeGraphic}><img src="../app/assets/images/donutlogo.png"/></div>
+          <div id="view-logo" onClick={this.changeGraphicIcon}><img src="../app/assets/images/donutlogo.png"/></div>
         </div>
       </div>
     );

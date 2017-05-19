@@ -39,7 +39,7 @@ class RiskCalculator extends React.Component {
 
 
   recordTransfers(differences){
-    let labels = this.props.risk.risk.labels;
+    let labels = this.props.riskState.risk.labels;
     let newDifferences = differences.slice(0);
 
     function sortNumber(a,b) {return a - b;}
@@ -115,9 +115,9 @@ class RiskCalculator extends React.Component {
  }
 
   calculateAllocation(){
-    let risk = this.props.risk;
-    let riskLevel = risk.risk.risk;
-    let riskRow = risk.risk.riskTable[riskLevel - 1];
+    let riskState = this.props.riskState;
+    let riskLevel = riskState.risk.level;
+    let riskRow = riskState.risk.table[riskLevel - 1];
     let riskRowValues = Object.values(riskRow).slice(1);
     let riskPercents = riskRowValues.map(value => {
           if(value == 0){
@@ -134,7 +134,7 @@ class RiskCalculator extends React.Component {
 
 
   createMain(){
-    this.props.risk.risk.labels.forEach(function(label){
+    this.props.riskState.risk.labels.forEach(function(label){
       $('.risk-calculator-main').append(`
         <div class='risk-calculator-main-row'>
             <label>${label} $:</label>
@@ -198,12 +198,16 @@ class RiskCalculator extends React.Component {
     this.recordNewAmountAndDifference();
   }
 
+  componentWillUnmount(){
+    this.props.receiveRisk({"risk": this.props.riskState.risk.level});
+  }
+
   render(){
     return(
       <div className="risk-calculator-container">
           <div className="risk-calculator-label">Personalized Portfolio</div>
           <div className="risk-calculator-label-container">
-            <div className="risk-calculator-label-risk">Risk Level {this.props.risk.risk.risk}</div>
+            <div className="risk-calculator-label-risk">Risk Level {this.props.riskState.risk.level}</div>
           </div>
           <div id="customRiskTable"></div>
           <div id="currentInvestmentContainer">Please Enter Your Current Portfolio

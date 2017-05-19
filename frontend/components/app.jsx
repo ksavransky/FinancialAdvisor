@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router';
 
 const App = ({ children }) => (
-  <div className="nav">
+  <header>
     <img id="top-logo" src="../../app/assets/images/home.ico"/>
-    <div className="app-title">Financial Advisor</div>
+    <div id="app-title">Financial Advisor</div>
     {children}
-  </div>
+  </header>
 );
 
 export default App;
