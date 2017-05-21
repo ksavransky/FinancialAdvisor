@@ -182,6 +182,8 @@ class RiskCalculator extends React.Component {
   }
 
   componentDidMount(){
+    console.log("componentDidMount in risk_Calculator, and the prop are:")
+    console.log(this.props)
     this.createTable();
     this.populatePortfolio();
   }
@@ -195,7 +197,9 @@ class RiskCalculator extends React.Component {
     $('.risk-calculator-main-input').each(function(){
         portfolio.push($(this)[0].value);
     })
-    this.props.riskState.risk.portfolio = portfolio;
+    // let appState = this.props.riskState.risk
+    // this.props.receiveRisk({"level": appState.level, "table": appState.table, "labels": appState.labels, "portfolio": portfolio});
+    this.props.updateRiskPortfolio(portfolio);
   }
 
   render(){

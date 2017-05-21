@@ -84,6 +84,8 @@ class RiskSelector extends React.Component {
   }
 
   componentDidMount() {
+    console.log("componentDidMount in risk_selector, and the prop are:")
+    console.log(this.props)
     this.setPriorRiskLevel();
   }
 
