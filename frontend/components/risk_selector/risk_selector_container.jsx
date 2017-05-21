@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import RiskSelector from './risk_selector.jsx';
 
 import { receiveRisk } from '../../actions/risk_actions';
+import { requestRiskTable } from '../../actions/risk_actions';
 import { riskReducer } from '../../reducers/risk_reducer';
 
 const mapStateToProps = state => ({
@@ -11,7 +12,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  receiveRisk: (risk) => dispatch(receiveRisk(risk))
+  receiveRisk: (risk) => dispatch(receiveRisk(risk)),
+  requestRiskTable: () => dispatch(requestRiskTable())
 });
 
 export default connect(

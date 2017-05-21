@@ -83,7 +83,14 @@ class RiskSelector extends React.Component {
     $('#continue').css('opacity', '1.0');
   }
 
+  componentWillMount(){
+  // if(!this.props.riskState){
+      // this.props.receiveRisk({"level": 0, "table": [], "labels": [], "portfolio": []});
+  // }
+}
+
   componentDidMount() {
+    this.props.requestRiskTable();
     console.log("componentDidMount in risk_selector, and the prop are:")
     console.log(this.props)
     this.setPriorRiskLevel();
