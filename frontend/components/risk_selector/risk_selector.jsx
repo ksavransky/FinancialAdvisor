@@ -23,11 +23,11 @@ class RiskSelector extends React.Component {
       labels: ["Bonds", "Large Cap", "Mid Cap", "Foreign", "Small Cap"]
     };
     this.changeGraphicIcon = this.changeGraphicIcon.bind(this);
-    this.createNumList = this.createNumList.bind(this);
     this.highlightNumber = this.highlightNumber.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
     this.goToCalculator = this.goToCalculator.bind(this);
     this.processClick = this.processClick.bind(this);
+    this.setPriorRiskLevel = this.setPriorRiskLevel.bind(this);
     this.setRisk = this.setRisk.bind(this);
   }
 
@@ -40,26 +40,6 @@ class RiskSelector extends React.Component {
       $('#donut-chart').css('display', 'none');
       $('#jsGrid').css('display', 'block');
       $("#view-logo img").attr("src","../app/assets/images/donutlogo.png");
-    }
-  }
-
-  createNumList(){
-    let ul = document.createElement("ul");
-    ul.classList.add('risk-selector-ul');
-    $("#risk-selector").append(ul);
-
-    for(let i = 0; i < 10; i++){
-      let li = document.createElement("li");
-      li.innerHTML = `${i + 1}`;
-      li.addEventListener('click', this.processClick);
-      $(".risk-selector-ul")[0].append(li);
-    }
-    if(this.props.riskState.risk){
-      this.setState({ risk: this.props.riskState.risk.level });
-      let that = this;
-      setTimeout(function(){
-            that.setRisk();
-      }, 100);
     }
   }
 
@@ -88,9 +68,13 @@ class RiskSelector extends React.Component {
   }
 
   processClick(e) {
-    e.preventDefault();
     this.setState({ risk: e.target.innerHTML });
-    this.setRisk();
+  }
+
+  setPriorRiskLevel(){
+    if(this.props.riskState.risk){
+      this.setState({ risk: this.props.riskState.risk.level });
+    }
   }
 
   setRisk() {
@@ -100,7 +84,11 @@ class RiskSelector extends React.Component {
   }
 
   componentDidMount() {
-    this.createNumList();
+    this.setPriorRiskLevel();
+  }
+
+  componentDidUpdate() {
+    this.setRisk();
   }
 
   componentWillUnmount(){
@@ -112,6 +100,9 @@ class RiskSelector extends React.Component {
   }
 
   render() {
+    let numArray = [];
+    for(let i = 1; i < 11; i++){numArray.push(i)}
+
     return(
       <div id="risk-selector-container">
         <div className="risk-selector-header-labels">
@@ -122,7 +113,15 @@ class RiskSelector extends React.Component {
           </div>
         </div>
         <div id="risk-selector-button-container">
-          <div id="risk-selector"></div>
+          <div id="risk-selector">
+            <ul className="risk-selector-ul">
+                {numArray.map((num) =>
+                        <li key={num} onClick={this.processClick}>
+                          {num}
+                        </li>
+                )}
+            </ul>
+          </div>
           <div id="continue" className="button" onClick={this.goToCalculator}>Continue</div>
         </div>
         <div id="graphic">
