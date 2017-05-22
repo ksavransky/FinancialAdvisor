@@ -18,8 +18,7 @@ class DonutChart extends React.Component {
 
     if (risk !== 0){
       riskLabels = this.props.labels.slice(0);
-      riskAmounts = [riskRow["Bonds %"], riskRow["Large Cap %"],
-                        riskRow["Mid Cap %"], riskRow["Foreign %"], riskRow["Small Cap %"]];
+      riskAmounts = Object.values(riskRow).slice(1);
       riskAmounts.forEach((amount, idx) => {
         if(amount == 0){
           riskLabels[idx] = '';
@@ -27,22 +26,11 @@ class DonutChart extends React.Component {
       })
     }
 
-    var seedData = [{
-      "label": riskLabels[0],
-      "value": riskAmounts[0]
-    }, {
-      "label": riskLabels[1],
-      "value": riskAmounts[1]
-    }, {
-      "label": riskLabels[2],
-      "value": riskAmounts[2]
-    }, {
-      "label": riskLabels[3],
-      "value": riskAmounts[3]
-    }, {
-      "label": riskLabels[4],
-      "value": riskAmounts[4]
-    }];
+    var seedData = [];
+
+    riskLabels.forEach((label, idx)=>{
+     seedData.push({"label": label, "value": riskAmounts[idx]})
+    })
 
     // Define size & radius of donut pie chart
     var width = 500,

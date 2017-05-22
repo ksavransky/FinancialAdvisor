@@ -52,9 +52,18 @@ class RiskCalculator extends React.Component {
 
   createTable(){
     let allocation = this.calculateAllocation();
+    let labels = this.props.riskState.risk.labels;
 
-    let customRisk = [{"Bonds": allocation[1][0] + "%", "Large Cap": allocation[1][1] + "%", "Mid Cap": allocation[1][2] + "%",
-                      "Foreign": allocation[1][3] + "%", "Small Cap": allocation[1][4] + "%"}];
+    let fields = [];
+    labels.forEach((label)=>{
+      fields.push({ name: label, type: "number", width: 70 })
+    })
+
+    let customRisk = {}
+    labels.forEach((label, idx)=>{
+      customRisk[label] = allocation[1][idx] + "%";
+    })
+    customRisk = [customRisk];
 
     $("#customRiskTable").jsGrid({
         width: "700px",
@@ -67,14 +76,7 @@ class RiskCalculator extends React.Component {
         paging: false,
 
         data: customRisk,
-
-        fields: [
-            { name: "Bonds", type: "number", width: 70 },
-            { name: "Large Cap", type: "number", width: 70 },
-            { name: "Mid Cap", type: "number", width: 70 },
-            { name: "Foreign", type: "number", width: 70 },
-            { name: "Small Cap", type: "number", width: 70 }
-        ]
+        fields: fields
     });
   }
 
@@ -182,8 +184,6 @@ class RiskCalculator extends React.Component {
   }
 
   componentDidMount(){
-    console.log("componentDidMount in risk_Calculator, and the prop are:")
-    console.log(this.props)
     this.createTable();
     this.populatePortfolio();
   }
@@ -197,8 +197,6 @@ class RiskCalculator extends React.Component {
     $('.risk-calculator-main-input').each(function(){
         portfolio.push($(this)[0].value);
     })
-    // let appState = this.props.riskState.risk
-    // this.props.receiveRisk({"level": appState.level, "table": appState.table, "labels": appState.labels, "portfolio": portfolio});
     this.props.updateRiskPortfolio(portfolio);
   }
 

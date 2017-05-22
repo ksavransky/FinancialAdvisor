@@ -13,11 +13,8 @@ const riskReducer = (state = {}, action) => {
       return nextState;
     case RECEIVE_RISK_TABLE:
       nextState = merge({}, state);
-      console.log("in RECEIVE_RISK_TABLE and the nextState is:")
-      console.log(nextState)
-      console.log("action.riskTable is:")
-      console.log(action.riskTable)
-      action.riskTable
+      nextState.risk.table = action.riskTable
+      nextState.risk.labels = Object.keys(action.riskTable[0]).slice(1).map((label)=>{return label.slice(0, -2)})
       return nextState;
     case UPDATE_RISK_PORTFOLIO:
       nextState = merge({}, state);

@@ -2,8 +2,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import RiskSelector from './risk_selector.jsx';
 
-import { receiveRisk } from '../../actions/risk_actions';
-import { requestRiskTable } from '../../actions/risk_actions';
+import { requestRiskTable, receiveRisk} from '../../actions/risk_actions';
 import { riskReducer } from '../../reducers/risk_reducer';
 
 const mapStateToProps = state => ({

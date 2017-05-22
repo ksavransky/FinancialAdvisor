@@ -9,8 +9,6 @@ import App from './app';
 import RiskSelectorContainer from './risk_selector/risk_selector_container.jsx';
 import RiskCalculatorContainer from './risk_calculator/risk_calculator_container.jsx';
 
-
-
 const Root = ({ store }) => {
 
   return (
