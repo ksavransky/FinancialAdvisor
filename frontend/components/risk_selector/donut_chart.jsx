@@ -13,8 +13,8 @@ class DonutChart extends React.Component {
     let riskTable = this.props.riskTable
     let riskRow = riskTable[risk - 1];
 
-    var riskAmounts= [1, 1, 1, 1, 1];
-    var riskLabels = ["","","","",""];
+    var riskAmounts= [20, 20, 20, 20, 20];
+    var riskLabels = ["Select Level","Select Level", "Select Level", "Select Level", "Select Level"];
     var arcToSmallIdx = [];
 
     if (risk !== 0){
@@ -172,8 +172,10 @@ class DonutChart extends React.Component {
 
     // Hover effects to reveal percents
     $('.arc').mouseenter((target)=>{
-      $(target.currentTarget.children[1]).css('visibility', 'hidden');
-      $(target.currentTarget.children[2]).css('visibility', 'visible');
+      if(this.props.riskLevel !== 0){
+        $(target.currentTarget.children[1]).css('visibility', 'hidden');
+        $(target.currentTarget.children[2]).css('visibility', 'visible');
+      }
     })
 
     $('.arc').mouseleave((target)=>{
