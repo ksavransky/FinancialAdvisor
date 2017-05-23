@@ -58,7 +58,7 @@ header {
 
 svg#donut-chart {
   display: none;
-  margin-top: 25px;
+  padding-top: 25px;
   padding-left: 60px;
 }
 
@@ -190,7 +190,7 @@ text.inner-circle {
   opacity: .85;
 }
 
-.arc{
+.arc {
   font-weight: 300;
   font-size: 18px;
   color: #fff;

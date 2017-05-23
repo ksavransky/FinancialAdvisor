@@ -15,6 +15,7 @@ class DonutChart extends React.Component {
 
     var riskAmounts= [1, 1, 1, 1, 1];
     var riskLabels = ["","","","",""];
+    var arcToSmallIdx = [];
 
     if (risk !== 0){
       riskLabels = this.props.labels.slice(0);
@@ -22,6 +23,8 @@ class DonutChart extends React.Component {
       riskAmounts.forEach((amount, idx) => {
         if(amount == 0){
           riskLabels[idx] = '';
+        } else if(amount < 10){
+          arcToSmallIdx.push(idx);
         }
       })
     }
@@ -37,8 +40,8 @@ class DonutChart extends React.Component {
         height = 500,
         radius = Math.min(width, height) / 2;
 
-    // Define arc colours
-    var colour = d3.scaleOrdinal(d3.schemeCategory20);
+    // Define arc colors
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
 
     // Define arc ranges
     var arcText = d3.scaleOrdinal()
@@ -61,6 +64,13 @@ class DonutChart extends React.Component {
       .append("g")
         .attr("transform", "translate(" + radius + "," + radius + ")");
 
+// svg.append("line")
+//                           .attr("x1", 5)
+//                           .attr("y1", 5)
+//                         .attr("x2", 50)
+//                          .attr("y2", 50)
+//                         .attr("stroke-width", 2)
+//                          .attr("stroke", "black");
     // Define inner circle
     svg.append("circle")
       .attr("cx", 0)
@@ -68,7 +78,7 @@ class DonutChart extends React.Component {
       .attr("r", 120)
       .attr("fill", "#fff") ;
 
-    // Calculate SVG paths and fill in the colours
+    // Calculate SVG paths and fill in the colors
     var g = svg.selectAll(".arc")
       .data(pie(seedData))
       .enter().append("g")
@@ -78,20 +88,46 @@ class DonutChart extends React.Component {
       g.append("path")
         .attr("d", arc)
         .attr("fill", function(d, i) {
-          return colour(i);
+console.log(d)
+          return color(i);
         });
+
+g.append("line")
+                       .attr("x1", 5)
+                         .attr("y1", 5)
+                        .attr("x2", 50)
+                        .attr("y2", 50)
+                         .attr("stroke-width", 2)
+                       .attr("stroke", "black");
 
       // Append text labels to each arc
       g.append("text")
         .attr("transform", function(d) {
-          return "translate(" + arc.centroid(d) + ")";
+          let arcCentroidCoords = arc.centroid(d);
+          if(d["data"].value < 10){
+            if(arcCentroidCoords[0] >= 0){
+              arcCentroidCoords[0] = arcCentroidCoords[0] + 10;
+            } else {
+              arcCentroidCoords[0] = arcCentroidCoords[0] - 10;
+            }
+            if(arcCentroidCoords[1] >= 0){
+              arcCentroidCoords[1] = arcCentroidCoords[1] + 73;
+            } else {
+              arcCentroidCoords[1] = arcCentroidCoords[1] - 73;
+            }
+          }
+          return "translate(" + arcCentroidCoords + ")";
         })
         .attr("dy", ".35em")
         .style("text-anchor", "middle")
         .attr("fill", "#fff")
-        .text(function(d,i) { return seedData[i].label; })
+        .text(function(d,i) {
+          return seedData[i].label;
+        })
 
-    g.selectAll(".arc text").call(wrap, arcText.range([0, width]));
+        arcToSmallIdx.forEach((idx)=>{
+          $($($('.arc')[idx])[0].children[1]).css('fill', 'black')
+        })
 
     // Append text to the inner circle
     svg.append("text")
@@ -107,31 +143,6 @@ class DonutChart extends React.Component {
       .attr("class", "inner-circle")
       .attr("fill", "#36454f")
       .text(function(d) { return 'Portfolio'; });
-
-    // Wrap function to handle labels with longer text
-    function wrap(text, width) {
-      text.each(function() {
-        var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 1.1, // ems
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-        while (word = words.pop()) {
-          line.push(word);
-          tspan.text(line.join(" "));
-          if (tspan.node().getComputedTextLength() > 90) {
-            line.pop();
-            tspan.text(line.join(" "));
-            line = [word];
-            tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-          }
-        }
-      });
-    }
   }
 
   componentDidMount(){
