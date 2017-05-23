@@ -64,13 +64,6 @@ class DonutChart extends React.Component {
       .append("g")
         .attr("transform", "translate(" + radius + "," + radius + ")");
 
-// svg.append("line")
-//                           .attr("x1", 5)
-//                           .attr("y1", 5)
-//                         .attr("x2", 50)
-//                          .attr("y2", 50)
-//                         .attr("stroke-width", 2)
-//                          .attr("stroke", "black");
     // Define inner circle
     svg.append("circle")
       .attr("cx", 0)
@@ -88,46 +81,79 @@ class DonutChart extends React.Component {
       g.append("path")
         .attr("d", arc)
         .attr("fill", function(d, i) {
-console.log(d)
           return color(i);
         });
-
-g.append("line")
-                       .attr("x1", 5)
-                         .attr("y1", 5)
-                        .attr("x2", 50)
-                        .attr("y2", 50)
-                         .attr("stroke-width", 2)
-                       .attr("stroke", "black");
 
       // Append text labels to each arc
       g.append("text")
         .attr("transform", function(d) {
           let arcCentroidCoords = arc.centroid(d);
-          if(d["data"].value < 10){
-            if(arcCentroidCoords[0] >= 0){
-              arcCentroidCoords[0] = arcCentroidCoords[0] + 10;
-            } else {
-              arcCentroidCoords[0] = arcCentroidCoords[0] - 10;
-            }
-            if(arcCentroidCoords[1] >= 0){
-              arcCentroidCoords[1] = arcCentroidCoords[1] + 73;
-            } else {
-              arcCentroidCoords[1] = arcCentroidCoords[1] - 73;
-            }
+          if(d["data"].value < 10 && d["data"].value !== 0){
+              arcCentroidCoords[0] = arcCentroidCoords[0] * 1.45;
+              arcCentroidCoords[1] = arcCentroidCoords[1] * 1.45;
           }
           return "translate(" + arcCentroidCoords + ")";
         })
         .attr("dy", ".35em")
-        .style("text-anchor", "middle")
         .attr("fill", "#fff")
+        .style("text-shadow", "0 0 4px black," +
+         "-1px -1px 0 black," +
+          "1px -1px 0 black," +
+          "-1px 1px 0 black," +
+           "1px 1px 0 black")
+        .style("text-anchor", "middle")
+        .style("visibility", "visible")
         .text(function(d,i) {
           return seedData[i].label;
-        })
+        });
 
-        arcToSmallIdx.forEach((idx)=>{
-          $($($('.arc')[idx])[0].children[1]).css('fill', 'black')
+    // Append text labels percent to each arc
+      g.append("text")
+        .attr("transform", function(d) {
+          let arcCentroidCoords = arc.centroid(d);
+          if(d["data"].value < 10 && d["data"].value !== 0){
+              arcCentroidCoords[0] = arcCentroidCoords[0] * 1.45;
+              arcCentroidCoords[1] = arcCentroidCoords[1] * 1.45;
+          }
+          return "translate(" + arcCentroidCoords + ")";
         })
+        .attr("dy", ".35em")
+        .attr("fill", "#fff")
+        .style("text-shadow", "0 0 4px black," +
+         "-1px -1px 0 black," +
+          "1px -1px 0 black," +
+          "-1px 1px 0 black," +
+           "1px 1px 0 black")
+        .style("text-anchor", "middle")
+        .style("visibility", "hidden")
+        .text(function(d,i) {
+          return seedData[i].value + "%";
+        });
+
+      // Add lines for smaller slices
+       g.append("line")
+          .attr("transform", function(d) {
+            return "translate(" + arc.centroid(d) + ")";
+          })
+         .attr("x1", 0)
+         .attr("y1", 0)
+         .attr("x2", function(d) {
+           if(d["data"].value < 10 && d["data"].value !== 0){
+              return arc.centroid(d)[0] / 2.7;
+            } else {
+              return 0;
+            }
+         })
+         .attr("y2", function(d) {
+           if(d["data"].value < 10 && d["data"].value !== 0){
+              return arc.centroid(d)[1] / 2.7;
+            } else {
+              return 0;
+            }
+         })
+         .attr("stroke-width", 1)
+         .attr("stroke", "black");
+
 
     // Append text to the inner circle
     svg.append("text")
@@ -143,6 +169,17 @@ g.append("line")
       .attr("class", "inner-circle")
       .attr("fill", "#36454f")
       .text(function(d) { return 'Portfolio'; });
+
+    // Hover effects to reveal percents
+    $('.arc').mouseenter((target)=>{
+      $(target.currentTarget.children[1]).css('visibility', 'hidden');
+      $(target.currentTarget.children[2]).css('visibility', 'visible');
+    })
+
+    $('.arc').mouseleave((target)=>{
+      $(target.currentTarget.children[2]).css('visibility', 'hidden');
+      $(target.currentTarget.children[1]).css('visibility', 'visible');
+    })
   }
 
   componentDidMount(){

@@ -10,10 +10,10 @@ class RiskSelector extends React.Component {
     this.changeGraphicIcon = this.changeGraphicIcon.bind(this);
     this.highlightNumber = this.highlightNumber.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
+    this.highlightRisk = this.highlightRisk.bind(this);
     this.goToCalculator = this.goToCalculator.bind(this);
     this.processClick = this.processClick.bind(this);
     this.setPriorRiskLevel = this.setPriorRiskLevel.bind(this);
-    this.setRisk = this.setRisk.bind(this);
   }
 
   changeGraphicIcon(){
@@ -31,6 +31,12 @@ class RiskSelector extends React.Component {
   highlightNumber(){
      $('li').css('background', 'white');
      $($('ul')[0].children[this.state.risk - 1]).css("background-color", "#e6ff3f");
+  }
+
+  highlightRisk() {
+    this.highlightRow();
+    this.highlightNumber();
+    $('#continue').css('opacity', '1.0');
   }
 
   highlightRow(){
@@ -64,12 +70,6 @@ class RiskSelector extends React.Component {
     }
   }
 
-  setRisk() {
-    this.highlightRow();
-    this.highlightNumber();
-    $('#continue').css('opacity', '1.0');
-  }
-
   componentWillMount(){
     if(!this.props.riskState.risk){
       this.props.receiveRisk({"level": this.state.risk, "table": [], "labels": [], "portfolio": []});
@@ -82,7 +82,9 @@ class RiskSelector extends React.Component {
   }
 
   componentDidUpdate() {
-    this.setRisk();
+    if(this.props.riskState.risk.level !== 0 || this.state.risk !== 0){
+      this.highlightRisk();
+    }
   }
 
   componentWillUnmount(){

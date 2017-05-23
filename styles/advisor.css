@@ -59,7 +59,7 @@ header {
 svg#donut-chart {
   display: none;
   padding-top: 25px;
-  padding-left: 60px;
+  padding-left: 110px;
 }
 
 text.inner-circle {
@@ -152,7 +152,6 @@ text.inner-circle {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-left: 20px;
 }
 
 #risk-selector-button-container {
@@ -362,4 +361,14 @@ text.inner-circle {
   to { outline: 0;
    border-color: black;
    box-shadow: none; }
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 800px) {
+  #risk-selector-container{
+    transform: scale(0.8, 0.8);
+    margin-top: -7%;
+    margin-right: 3%;
+    margin-left: 3%;
+  }
 }
