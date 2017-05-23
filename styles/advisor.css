@@ -247,10 +247,10 @@ text.inner-circle {
 }
 
 .risk-calculator-input-labels  label:nth-child(1){
-  margin-right: 65px;
+  margin-right: 60px;
 }
 .risk-calculator-input-labels  label:nth-child(2){
-  margin-right: 33px;
+  margin-right: 30px;
 }
 .risk-calculator-input-labels  label:nth-child(3){
   margin-right: 11px;
@@ -308,7 +308,7 @@ text.inner-circle {
 }
 
 .risk-calculator-transfers div{
- margin: 2px;
+ margin: 4px;
 }
 
 .risk-label{
