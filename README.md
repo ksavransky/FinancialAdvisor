@@ -9,9 +9,8 @@ Financial Advisor was developed using React/Redux, JS, jQuery, D3, and HTML/CSS.
 Enjoy!
 
 ## Views
+![Financial Advisor Donut Chart](app/assets/donutchart.png)
 
 ![Financial Advisor Risk Level Table](app/assets/riskleveltable.png)
-
-![Financial Advisor Donut Chart](app/assets/donutchart.png)
 
 ![Financial Advisor Personalized Portfolio](app/assets/personalized.png)
