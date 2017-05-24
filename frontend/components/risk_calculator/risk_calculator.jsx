@@ -28,25 +28,26 @@ class RiskCalculator extends React.Component {
       });
 
     return [riskPercents.map(percent => {
-      return Math.ceil(100*(percent * this.state.money))/100
+      return Math.floor(100*(percent * this.state.money))/100
     }), riskRowValues]
   }
 
   checkErrorsAndSetTotal(){
     let totalAmount = 0;
     let validInput = true;
+    let validRegEx = /(?=.)^\$?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)?(\.[0-9]{1,2})?$/;
     $('.risk-calculator-main-input').each(function(idx){
-      if(/\D/.test(this.value) || this.value < 0 || this.value == ""){
+      if(!validRegEx.test(this.value) || this.value < 0 || this.value == ""){
           $('.risk-calculator-transfers')[0].innerHTML = "Please use only positive digits or zero when entering current amounts. Please enter all inputs correctly.";
           $($('.risk-calculator-transfers')[0]).css('color', 'red');
           validInput = false;
       } else {
-        totalAmount += parseInt(this.value);
+        totalAmount += parseFloat(this.value.replace(/[^0-9\.]+/g, ''));
       }
     })
     if(validInput){
       $($('.risk-calculator-transfers')[0]).css('color', 'black');
-      this.setState({money: totalAmount});
+      this.setState({money: Math.floor(totalAmount * 100) / 100});
     }
   }
 
@@ -111,11 +112,19 @@ class RiskCalculator extends React.Component {
       let allocation = this.calculateAllocation();
       let differences = [];
 
+      function nullifyRemainder(remIdx, differences){
+          $('.risk-calculator-main-new')[remIdx].value = $('.risk-calculator-main-input')[remIdx].value.replace(/[^0-9\.]+/g, '');
+          let $difference = $('.risk-calculator-main-difference')[remIdx];
+          $difference.value = "+" + 0;
+          $($difference).css('color', 'green');
+          differences[remIdx] = 0;
+      }
+
       allocation[0].forEach(function(newAmount, idx){
         $('.risk-calculator-main-new')[idx].value = newAmount;
         $($('.risk-calculator-main-new')[idx]).css('color', 'blue');
-        let inputAmount = $('.risk-calculator-main-input')[idx].value;
-        let difference = Math.ceil(100*(newAmount - inputAmount))/100;
+        let inputAmount = $('.risk-calculator-main-input')[idx].value.replace(/[^0-9\.]+/g, '');
+        let difference = Math.round(100*(newAmount - inputAmount))/100;
 
         if (difference >= 0){
           $('.risk-calculator-main-difference')[idx].value = "+" + difference;
@@ -124,14 +133,36 @@ class RiskCalculator extends React.Component {
           $('.risk-calculator-main-difference')[idx].value = difference;
           $($('.risk-calculator-main-difference')[idx]).css('color', 'red');
         }
+
         differences.push(difference);
       })
+
+      var sum = 0;
+      $('.risk-calculator-main-new').each((idx, el)=>{
+         sum += parseFloat($(el)[0].value)
+      })
+      let remainder = Math.round(100*(sum - this.state.money))/100;
+      let remainderIdx = differences.indexOf(remainder)
+
+      if(remainderIdx !== -1 && remainder !== 0){
+          nullifyRemainder(remainderIdx, differences);
+      } else {
+        let workingRemainder = remainder;
+        while (workingRemainder < 0 && remainder !== 0) {
+            workingRemainder = Math.round(100*(workingRemainder + 0.01))/100
+            let workingRemainderIdx = differences.indexOf(workingRemainder);
+            if(workingRemainderIdx !== -1){
+              nullifyRemainder(workingRemainderIdx, differences);
+              remainder -= workingRemainder;
+            }
+        }
+      }
 
       $('.risk-calculator-transfers')[0].innerHTML = "";
       this.recordTransfers(differences);
    }
 
-  recordTransfers(differences){
+  recordTransfers(differences, counter = 0, recordedTransfers = []){
     let labels = this.props.riskState.risk.labels;
     let newDifferences = differences.slice(0);
 
@@ -140,6 +171,7 @@ class RiskCalculator extends React.Component {
 
     let transferMade = false;
     let smallestFittingDeficit = null;
+
     sortedDiff.slice(0).reverse().forEach(function(surplus){
        if(!transferMade && surplus > 0){
           sortedDiff.forEach(function(deficit){
@@ -153,8 +185,10 @@ class RiskCalculator extends React.Component {
               let deficitIdx = newDifferences.indexOf(smallestFittingDeficit);
               newDifferences[surplusIdx] = 0;
               newDifferences[deficitIdx] = surplus + smallestFittingDeficit;
-              let transferString = `<div>• Transfer $${Math.ceil(100*surplus)/100} from ${labels[deficitIdx]} to ${labels[surplusIdx]}.</div>`
+              let transferAmount = Math.round(100*surplus)/100;
+              let transferString = `<div>• Transfer $${transferAmount} from ${labels[deficitIdx]} to ${labels[surplusIdx]}.</div>`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
+              recordedTransfers.push({"from": deficitIdx, "to":surplusIdx, "amount": transferAmount});
               transferMade = true;
           }
        }
@@ -169,8 +203,10 @@ class RiskCalculator extends React.Component {
               let deficitIdx = newDifferences.indexOf(smallestDeficit);
               newDifferences[surplusIdx] = smallestSurplus + smallestDeficit;
               newDifferences[deficitIdx] = 0;
-              let transferString = `<div>• Transfer $${Math.ceil(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100} from ${labels[deficitIdx]} to ${labels[surplusIdx]}.</div>`
+              let transferAmount = Math.round(100*(smallestSurplus - (smallestSurplus + smallestDeficit)))/100;
+              let transferString = `<div>• Transfer $${transferAmount} from ${labels[deficitIdx]} to ${labels[surplusIdx]}.</div>`
               $('.risk-calculator-transfers')[0].innerHTML += transferString;
+              recordedTransfers.push({"from": deficitIdx, "to":surplusIdx, "amount": transferAmount});
               transferMade = true;
             }
           })
@@ -178,8 +214,47 @@ class RiskCalculator extends React.Component {
       })
     }
 
-    if(newDifferences.filter(function(x){return x==0}).length < 4){
-      this.recordTransfers(newDifferences);
+    newDifferences = newDifferences.map((el)=>{return Math.round(100 * el)/100})
+
+    let numOfZeroDifferences = newDifferences.filter(function(x){return x==0}).length;
+
+    if(numOfZeroDifferences < 4 && counter < 7){
+      this.recordTransfers(newDifferences, counter + 1, recordedTransfers);
+    }
+    else if (numOfZeroDifferences == 4){
+      let amount = newDifferences.find((el)=>el !== 0);
+      let surplusIdx = newDifferences.indexOf(amount);
+      let largestAmount = $('.risk-calculator-main-new').map((idx, el)=>{
+        return parseFloat(el.value);
+      }).sort().last()[0]
+      let deficitIdx;
+      $('.risk-calculator-main-new').each((idx, el)=>{
+           if(parseFloat(el.value) == largestAmount) {deficitIdx = idx};
+      })
+
+      $('.risk-calculator-main-new')[deficitIdx].value = Math.round(100 * (largestAmount - amount))/100;
+
+      let newDif = largestAmount - amount - Math.round(100 * parseFloat($('.risk-calculator-main-input')[deficitIdx].value.replace(/[^0-9\.]+/g, '')))/100
+      let addPlusSign = "+";
+      if(newDif < 0){
+        addPlusSign = "";
+      }
+      $('.risk-calculator-main-difference')[deficitIdx].value = addPlusSign + Math.round(100 * newDif)/100;
+
+      let priorStringModified = false;
+      recordedTransfers.forEach((transfer, idx)=>{
+        if(transfer["from"] == surplusIdx && transfer["to"] == deficitIdx){
+            let newAmount = Math.round(100 * (Math.abs(amount) + transfer["amount"]))/100
+            let newString = `<div>• Transfer $${newAmount} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.</div>`
+            $('.risk-calculator-transfers div')[idx].innerHTML = newString;
+            priorStringModified = true;
+        }
+      });
+
+      if(!priorStringModified){
+          let transferString = `<div>• Transfer $${Math.abs(amount)} from ${labels[surplusIdx]} to ${labels[deficitIdx]}.</div>`;
+          $('.risk-calculator-transfers')[0].innerHTML += transferString;
+      }
     }
   }
 
