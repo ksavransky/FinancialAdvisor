@@ -162,7 +162,7 @@ class RiskCalculator extends React.Component {
       this.recordTransfers(differences);
    }
 
-  recordTransfers(differences, counter = 0, recordedTransfers = []){
+  recordTransfers(differences, recursionSafetyCounter = 0, recordedTransfers = []){
     let labels = this.props.riskState.risk.labels;
     let newDifferences = differences.slice(0);
 
@@ -218,8 +218,8 @@ class RiskCalculator extends React.Component {
 
     let numOfZeroDifferences = newDifferences.filter(function(x){return x==0}).length;
 
-    if(numOfZeroDifferences < 4 && counter < 7){
-      this.recordTransfers(newDifferences, counter + 1, recordedTransfers);
+    if(numOfZeroDifferences < 4 && recursionSafetyCounter < 7){
+      this.recordTransfers(newDifferences, recursionSafetyCounter + 1, recordedTransfers);
     }
     else if (numOfZeroDifferences == 4){
       let amount = newDifferences.find((el)=>el !== 0);
