@@ -8,6 +8,7 @@ class RiskCalculator extends React.Component {
       this.checkErrorsAndSetTotal = this.checkErrorsAndSetTotal.bind(this);
       this.createTable = this.createTable.bind(this);
       this.inputCheck = this.inputCheck.bind(this);
+      this.nullifyRemainder = this.nullifyRemainder.bind(this);
       this.populatePortfolio = this.populatePortfolio.bind(this);
       this.rebalance = this.rebalance.bind(this);
       this.recordNewAmountAndDifference = this.recordNewAmountAndDifference.bind(this);
@@ -95,6 +96,14 @@ class RiskCalculator extends React.Component {
     }
   }
 
+  nullifyRemainder(remIdx, differences){
+    $('.risk-calculator-main-new')[remIdx].value = $('.risk-calculator-main-input')[remIdx].value.replace(/[^0-9\.]+/g, '');
+    let $difference = $('.risk-calculator-main-difference')[remIdx];
+    $difference.value = "+" + 0;
+    $($difference).css('color', 'green');
+    differences[remIdx] = 0;
+  }
+
   populatePortfolio(){
     this.props.riskState.risk.portfolio.forEach(function(amount, idx){
       $('.risk-calculator-main-input')[idx].value = amount;
@@ -112,14 +121,6 @@ class RiskCalculator extends React.Component {
       let allocation = this.calculateAllocation();
       let differences = [];
 
-      function nullifyRemainder(remIdx, differences){
-          $('.risk-calculator-main-new')[remIdx].value = $('.risk-calculator-main-input')[remIdx].value.replace(/[^0-9\.]+/g, '');
-          let $difference = $('.risk-calculator-main-difference')[remIdx];
-          $difference.value = "+" + 0;
-          $($difference).css('color', 'green');
-          differences[remIdx] = 0;
-      }
-
       allocation[0].forEach(function(newAmount, idx){
         $('.risk-calculator-main-new')[idx].value = newAmount;
         $($('.risk-calculator-main-new')[idx]).css('color', 'blue');
@@ -133,11 +134,10 @@ class RiskCalculator extends React.Component {
           $('.risk-calculator-main-difference')[idx].value = difference;
           $($('.risk-calculator-main-difference')[idx]).css('color', 'red');
         }
-
         differences.push(difference);
       })
 
-      var sum = 0;
+      let sum = 0;
       $('.risk-calculator-main-new').each((idx, el)=>{
          sum += parseFloat($(el)[0].value)
       })
@@ -145,14 +145,14 @@ class RiskCalculator extends React.Component {
       let remainderIdx = differences.indexOf(remainder)
 
       if(remainderIdx !== -1 && remainder !== 0){
-          nullifyRemainder(remainderIdx, differences);
+          this.nullifyRemainder(remainderIdx, differences);
       } else {
         let workingRemainder = remainder;
         while (workingRemainder < 0 && remainder !== 0) {
             workingRemainder = Math.round(100*(workingRemainder + 0.01))/100
             let workingRemainderIdx = differences.indexOf(workingRemainder);
             if(workingRemainderIdx !== -1){
-              nullifyRemainder(workingRemainderIdx, differences);
+              this.nullifyRemainder(workingRemainderIdx, differences);
               remainder -= workingRemainder;
             }
         }
@@ -162,7 +162,7 @@ class RiskCalculator extends React.Component {
       this.recordTransfers(differences);
    }
 
-  recordTransfers(differences, recursionSafetyCounter = 0, recordedTransfers = []){
+  recordTransfers(differences, recordedTransfers = [], recursionSafetyCounter = 0){
     let labels = this.props.riskState.risk.labels;
     let newDifferences = differences.slice(0);
 
@@ -218,9 +218,11 @@ class RiskCalculator extends React.Component {
 
     let numOfZeroDifferences = newDifferences.filter(function(x){return x==0}).length;
 
+    // make recursive call, if transfers can still be made (which means at least two differences are not zero)
     if(numOfZeroDifferences < 4 && recursionSafetyCounter < 7){
-      this.recordTransfers(newDifferences, recursionSafetyCounter + 1, recordedTransfers);
+      this.recordTransfers(newDifferences, recordedTransfers, recursionSafetyCounter + 1);
     }
+    // if we have exactly four zero differences, meaning one bucket has a remainder that should be added to the largest amount
     else if (numOfZeroDifferences == 4){
       let amount = newDifferences.find((el)=>el !== 0);
       let surplusIdx = newDifferences.indexOf(amount);
